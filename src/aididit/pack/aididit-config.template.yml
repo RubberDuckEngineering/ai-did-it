@@ -1,0 +1,38 @@
+# A·I·DID·IT configuration.
+# Spec Kit copies this file to .specify/extensions/aididit/aididit-config.yml on first install
+# and keeps your copy on every reinstall. Never put credentials here.
+
+board:
+  # Where work items come from: markdown (a Kanban file in this repo), github (Issues via `gh`),
+  # or jira (needs an Atlassian MCP server available to your agent).
+  provider: markdown
+  markdown_path: .specify/aididit/board.md
+  github_ready_label: ready
+  jira_project_key: ""
+  jira_ready_status: "Selected for Development"
+
+lanes:
+  # How one lane link starts the next:
+  #   inline        - the current session runs the next stage itself (works with every agent)
+  #   claude        - a detached headless `claude -p` session per link, logged to .specify/aididit/lanes/
+  #   claude-remote - a `claude --remote-control` session per link, visible in Claude Desktop and mobile
+  runner: inline
+  max_parallel: 3
+
+panel:
+  # The practitioner panel answers the questions a human would normally be asked.
+  practitioners: ["Kent Beck", "Martin Fowler", "Dave Farley", "Udi Dahan", "Robert C. Martin"]
+  require_citations: true
+
+loops:
+  clarify_max_rounds: 3
+  analyze_max_rounds: 3
+
+delivery:
+  # human: Deliver stops with a green PR and waits for you to merge.
+  # auto:  "Full Auto Mode" - the Deliver link merges its own PR once checks are green and threads resolved.
+  merge: human
+  default_branch: main
+
+retro:
+  directory: .specify/aididit/retros

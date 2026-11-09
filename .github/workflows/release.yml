@@ -1,0 +1,23 @@
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  pack-zip:
+    name: attach the pack zip to a release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync
+      - name: build the zip, refusing a tag that disagrees with the pack version
+        run: uv run python -m tools.build_pack_zip --out "dist/aididit-${GITHUB_REF_NAME}.zip" --expect-version "$GITHUB_REF_NAME"
+      - name: create the release with the zip attached
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" "dist/aididit-${GITHUB_REF_NAME}.zip" --title "$GITHUB_REF_NAME" --notes "See CHANGELOG.md for what changed in $GITHUB_REF_NAME."

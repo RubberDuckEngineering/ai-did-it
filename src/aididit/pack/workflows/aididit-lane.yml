@@ -1,0 +1,75 @@
+schema_version: "1.0"
+workflow:
+  id: "aididit-lane"
+  name: "A·I·DID·IT single lane"
+  version: "0.2.0"
+  author: "Rubber Duck Engineering"
+  description: "Runs one work item through Ideate → Draft → Iterate → Deliver → (you merge) → Investigate → Tidy, with you approving each hand-off"
+
+# Each stage is invoked as a direct run (no `lane:` argument), so no stage starts the next one
+# itself: this workflow is the only thing that sequences them. For parallel, self-chaining lanes,
+# use Assemble instead.
+
+requires:
+  speckit_version: ">=1.3.0,<2.0.0"
+  integrations:
+    any: ["claude", "copilot", "gemini", "codex", "opencode"]
+
+inputs:
+  item:
+    type: string
+    required: true
+    prompt: "Work item reference (e.g. AID-3 on the markdown board, or #42 on GitHub)"
+  integration:
+    type: string
+    default: "auto"
+    prompt: "Integration to use ('auto' uses the project's initialized integration)"
+
+steps:
+  - id: ideate
+    command: speckit.aididit.ideate
+    integration: "{{ inputs.integration }}"
+    input:
+      args: "mode:B item:{{ inputs.item }}"
+
+  - id: accept
+    type: gate
+    message: "Did Ideate accept the item as one buildable slice? Reject if it was declined, discharged or split."
+    options: [approve, reject]
+    on_reject: abort
+
+  - id: draft
+    command: speckit.aididit.draft
+    integration: "{{ inputs.integration }}"
+    input:
+      args: "item:{{ inputs.item }}"
+
+  - id: iterate
+    command: speckit.aididit.iterate
+    integration: "{{ inputs.integration }}"
+    input:
+      args: "item:{{ inputs.item }}"
+
+  - id: deliver
+    command: speckit.aididit.deliver
+    integration: "{{ inputs.integration }}"
+    input:
+      args: "item:{{ inputs.item }}"
+
+  - id: merge
+    type: gate
+    message: "The PR is green and every thread is resolved. Merge it, then approve to run Investigate and Tidy."
+    options: [approve, reject]
+    on_reject: abort
+
+  - id: investigate
+    command: speckit.aididit.investigate
+    integration: "{{ inputs.integration }}"
+    input:
+      args: "item:{{ inputs.item }}"
+
+  - id: tidy
+    command: speckit.aididit.tidy
+    integration: "{{ inputs.integration }}"
+    input:
+      args: "item:{{ inputs.item }}"

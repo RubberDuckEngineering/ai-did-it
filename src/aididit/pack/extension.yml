@@ -1,0 +1,76 @@
+schema_version: "1.0"
+
+extension:
+  id: "aididit"
+  name: "A·I·DID·IT — Agile Expansion Pack"
+  version: "0.2.0"
+  description: "Runs every work item through Assemble, Ideate, Draft, Iterate, Deliver, Investigate and Tidy, with a simulated agile team and a web-cited practitioner panel in place of human gates."
+  author: "Rubber Duck Engineering"
+  repository: "https://github.com/RubberDuckEngineering/rubber-duck-engineering-ai-did-it"
+  homepage: "https://github.com/RubberDuckEngineering/rubber-duck-engineering-ai-did-it"
+  license: "MIT"
+
+requires:
+  speckit_version: ">=1.3.0,<2.0.0"
+
+provides:
+  commands:
+    # ── The A·I·DID·IT lifecycle: one orchestrator plus six lane links ──
+    - name: "speckit.aididit.assemble"
+      file: "stages/assemble/speckit.aididit.assemble.md"
+      description: "A — read the board and ship every ready work item as its own lane (\"Agents Assemble\")"
+    - name: "speckit.aididit.ideate"
+      file: "stages/ideate/speckit.aididit.ideate.md"
+      description: "I — brainstorm a new work item (Mode A) or interrogate an accepted one before drafting (Mode B)"
+    - name: "speckit.aididit.draft"
+      file: "stages/draft/speckit.aididit.draft.md"
+      description: "D — specify, clarify, plan, task and analyze until the spec is ready to build"
+    - name: "speckit.aididit.iterate"
+      file: "stages/iterate/speckit.aididit.iterate.md"
+      description: "I — implement with TDD, commit, push, open the PR and run the post-implementation analyze"
+    - name: "speckit.aididit.deliver"
+      file: "stages/deliver/speckit.aididit.deliver.md"
+      description: "D — panel and bot review on the open PR, resolve threads, drive checks green, stop for the merge"
+    - name: "speckit.aididit.investigate"
+      file: "stages/investigate/speckit.aididit.investigate.md"
+      description: "I — prove the merged change works in the running system and sweep for collateral damage"
+    - name: "speckit.aididit.tidy"
+      file: "stages/tidy/speckit.aididit.tidy.md"
+      description: "T — close the work item, triage the board and turn retro actions into new work"
+
+    # ── The simulated agile team ──
+    - name: "speckit.aididit.po"
+      file: "personas/po/speckit.aididit.po.md"
+      description: "Product Owner — shape, slice and prioritise stories with testable acceptance criteria"
+    - name: "speckit.aididit.architect"
+      file: "personas/architect/speckit.aididit.architect.md"
+      description: "Architect — adjudicate design decisions and record them as ADRs"
+    - name: "speckit.aididit.qa"
+      file: "personas/qa/speckit.aididit.qa.md"
+      description: "QA — test strategy, acceptance tests and test-quality review"
+    - name: "speckit.aididit.devsec"
+      file: "personas/devsec/speckit.aididit.devsec.md"
+      description: "DevSec — threat-model the change and review it against OWASP and least privilege"
+    - name: "speckit.aididit.devops"
+      file: "personas/devops/speckit.aididit.devops.md"
+      description: "DevOps — pipelines, infrastructure as code, deployability and observability"
+    - name: "speckit.aididit.pr-prep"
+      file: "personas/pr-prep/speckit.aididit.pr-prep.md"
+      description: "PR Prep — get a branch review-ready before the PR is opened"
+    - name: "speckit.aididit.pr-review"
+      file: "personas/pr-review/speckit.aididit.pr-review.md"
+      description: "PR Review — structured review with Conventional Comments"
+
+  config:
+    - name: "aididit-config.yml"
+      template: "aididit-config.template.yml"
+      description: "Board provider, lane runner, practitioner panel, loop budgets and merge policy"
+      required: false
+
+tags:
+  - "agile"
+  - "xp"
+  - "workflow"
+  - "orchestration"
+  - "tdd"
+  - "review"

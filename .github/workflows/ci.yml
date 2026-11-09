@@ -1,0 +1,67 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: test (${{ matrix.os }}, py${{ matrix.python }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python: ["3.11", "3.13"]
+    env:
+      AIDIDIT_REQUIRE_E2E: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: ${{ matrix.python }}
+      - run: uv sync
+      - run: uv run ruff check src tests tools
+      - run: uv run ruff format --check src tests tools
+      - run: uv run pytest --cov=aididit --cov=tools
+
+  identity:
+    name: commit identity holds no private term
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v6
+      - name: check every commit's author and committer
+        env:
+          DENYLIST: ${{ secrets.AIDIDIT_PII_DENYLIST }}
+          RANGE: ${{ github.event_name == 'pull_request' && format('{0}..{1}', github.event.pull_request.base.sha, github.event.pull_request.head.sha) || 'HEAD' }}
+        run: |
+          if [ -z "$DENYLIST" ]; then
+            echo "::warning::AIDIDIT_PII_DENYLIST is not set; commit identities were not checked"
+            exit 0
+          fi
+          printf '%s\n' "$DENYLIST" > "$RUNNER_TEMP/denylist.txt"
+          uv run python -m tools.check_commit_identity --denylist "$RUNNER_TEMP/denylist.txt" --range "$RANGE"
+
+  tool-install:
+    name: install as a uv tool and smoke-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv tool install .
+      - run: aididit --version
+      - run: aididit doctor
+      - name: install into a fresh project
+        run: |
+          mkdir demo && cd demo && git init -q
+          aididit install --integration claude
+          test -f .specify/extensions/aididit/extension.yml
+          test -f .claude/skills/speckit-aididit-assemble/SKILL.md
+          test -f .specify/aididit/board.md

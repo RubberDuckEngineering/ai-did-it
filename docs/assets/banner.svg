@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" role="img" aria-labelledby="title desc">
+  <title id="title">AI Did It</title>
+  <desc id="desc">A yellow rubber duck floating beside the wordmark A·I·DID·IT, an agile expansion pack for GitHub Spec Kit.</desc>
+  <rect width="1200" height="300" rx="28" fill="#1B2A41"/>
+  <rect x="6" y="6" width="1188" height="288" rx="24" fill="none" stroke="#FFD23F" stroke-width="3"/>
+  <g transform="translate(40 30)">
+    <path d="M10 214 q30 -14 60 0 t60 0 t60 0 t60 0" fill="none" stroke="#7C8BA1" stroke-width="5" stroke-linecap="round"/>
+    <path d="M30 150 L6 112 L58 138 Z" fill="#FFD23F"/>
+    <ellipse cx="128" cy="160" rx="100" ry="58" fill="#FFD23F"/>
+    <ellipse cx="116" cy="158" rx="52" ry="28" fill="#F5A142" opacity="0.6"/>
+    <circle cx="196" cy="88" r="50" fill="#FFD23F"/>
+    <path d="M236 84 L290 98 L236 114 Z" fill="#F5A142"/>
+    <circle cx="210" cy="76" r="9" fill="#1B2A41"/>
+    <circle cx="213" cy="73" r="3" fill="#FFFFFF"/>
+  </g>
+  <text x="360" y="148" font-family="Trebuchet MS, Verdana, Arial, sans-serif" font-size="96" font-weight="700" fill="#FFD23F" letter-spacing="4">A·I·DID·IT</text>
+  <text x="364" y="202" font-family="Trebuchet MS, Verdana, Arial, sans-serif" font-size="32" fill="#FFF4D6">An agile expansion pack for GitHub Spec Kit</text>
+  <text x="364" y="248" font-family="Trebuchet MS, Verdana, Arial, sans-serif" font-size="22" fill="#C9D3E0">Assemble · Ideate · Draft · Iterate · Deliver · Investigate · Tidy</text>
+</svg>

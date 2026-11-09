@@ -1,0 +1,114 @@
+# Changelog
+
+All notable changes to this project are documented here. The format follows
+[Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses
+[Semantic Versioning](https://semver.org/).
+
+## [Unreleased]
+
+## [0.2.0] - 2026-11-09
+
+### Added
+
+- **A release zip Spec Kit can install by URL.** Pushing a `vX.Y.Z` tag runs
+  `.github/workflows/release.yml`, which builds the pack with `extension.yml` at the archive root
+  (plus the README and LICENSE) and attaches it to a GitHub release. It refuses to build when the
+  tag and the pack version disagree. A GitHub source archive cannot serve this: Spec Kit looks for
+  `extension.yml` at most one folder deep.
+- **A commit-identity check.** `tools/check_commit_identity.py` fails when a commit's author or
+  committer name or email holds a term from a private denylist. CI runs it when the
+  `AIDIDIT_PII_DENYLIST` Actions secret is set; a hit names the commit and field, never the term.
+- A code of conduct, issue and pull-request templates, and an email fallback in the security
+  policy.
+- The README's Quick Start names the Python floor (3.11), checked against `pyproject.toml`.
+- The field guide in `docs/`: a lifecycle guide, a flow for each of the seven stages, the
+  practitioner panel, boards and lane runners, the CLI, a brand book, and a sources page holding
+  every citation, checked and dated.
+- A branded Mermaid house style. It is light and dark safe by measurement: every diagram must use it,
+  and `tests/test_diagrams.py` re-checks its WCAG 2.2 contrast against GitHub's light, dark and dark
+  dimmed page colours.
+- Citation anchors are now link-checked, so a citation to a missing source fails the suite.
+- A banner for the README.
+- **A citation verifier.** The pack ships `scripts/verify-quote.py`, a standard-library Python
+  script that checks quoted strings against a cited page (URL or file) on any OS. It removes tags,
+  folds case, whitespace, curly quotes and dashes, and checks a positive and a negative control on
+  every run. Exit `0` is FOUND, `3` is MISSING, and `4` is INSTRUMENT-FAILURE; a crash is never
+  reported as a missing quote, and neither is a quote missing from text the controls cannot vouch
+  for (a byline found only in a script's data, or bytes the page's charset could not decode). The
+  charset comes from the server, then the page's `<meta>` tag, decoded the way browsers do. A quote
+  missing from a page whose controls passed is a finding about the citation, however many are
+  missing; an elided quote is checked one continuous piece at a time. Lanes stop improvising a matcher with `grep`, which aborts on
+  Windows Git Bash and was read as "every quote missing".
+
+### Changed
+
+- **Citation checks use the verifier.** `practitioner-panel.md` section 3 shows how to call
+  `verify-quote.py` and treats any exit other than `0` or `3` as an instrument failure. The panel
+  guide's Step 6 and the failure-mode table point at it.
+
+- **Proportional panels.** The practitioner panel now convenes only where a judgement is real. The
+  rules live once, in `panel-guide.md` Part 0, and each stage cites the one it obeys:
+  - P1: mechanical findings are fixed directly, in every round.
+  - P2: in a lane, a handoff with no open question answers Step 1's intent check.
+  - P3: a retro vet is one reviewer applying every lens, with no citations.
+  - P4: "once" means one ruling per finding, in one round.
+  - P5: grooming skips the panel when the candidates already fit the WIP limit.
+- The `inline` runner's prompt files reference the lane contract by path instead of copying it.
+- A retro's High-cost stage-efficiency rows must become an action or a proposed edit.
+- **The lane contract closes its loops.** Five rules are defined once in `lane-contract.md`, and
+  every stage that relies on one points at it:
+  - Merge check: a human's "merged" is a cue to ask the host. Investigate starts only when the
+    host reports `MERGED` with a merge time, never on `merge_commit_sha`.
+  - Runtime state: every clean-tree gate ignores the board and the lane folders, and no lane
+    commits the board. You own it.
+  - Upstream route: a lesson about the installed pack is drafted as an issue for the pack's own
+    repository, not filed as project work no lane may do. A project method file is edited only by
+    the lane claimed for it.
+  - Widening allowed paths: Draft re-derives them from `tasks.md`, and a widening is checked
+    against sibling lanes before handoff.
+  - Required checks: with none marked required, every check that ran on the PR head counts.
+- **One rule, one place.** Rules the pack stated more than once now live in one file, and the
+  others point there: the secret scan (one list of credential shapes, one `<redacted:{kind}>`
+  marker, refuse only when redaction fails), the decision-record format (now with a `Recorded:`
+  UTC timestamp), the retro commit subject, and the rule for PR body edits (once per phase
+  boundary, not after every commit).
+- Gaps the dogfood lane hit are now written down. Ideate skips the panel when B1 to B4 find
+  nothing. Specify's `[NEEDS CLARIFICATION]` markers go to the clarify loop instead of waiting.
+  Draft asks Spec Kit's tasks step for TDD explicitly, and passes `GIT_BRANCH_NAME` only where the
+  git hook exists. A mutation shared across test layers must reach each one. Iterate counts the
+  pre-sweep analyze pass as round 1 and re-runs touched gates after the panel's fixes. Deliver
+  sits out lenses with nothing to review and acts on checked evidence, not bare citations.
+  pr-prep accepts a terminal transcript as CLI visual proof. pr-review's verdict follows its
+  blocking findings. Investigate records signals a system lacks as `absent (verified: <how>)`.
+- **Breaking:** the seven short stage aliases (`speckit.assemble`, `speckit.draft`, and the rest)
+  are gone. They doubled the skill list, sat in Spec Kit core's unprefixed namespace, and collided
+  with other `speckit.*` workflows. Use the `speckit.aididit.*` names.
+- The shared guides name commands by their canonical names (`/speckit.aididit.ideate`) instead of
+  `__SPECKIT_COMMAND_*__` tokens. Spec Kit renders tokens only in registered command files and copies
+  the guides verbatim, so lanes were reading raw tokens.
+- `aididit` prints "AI Did It" instead of the dotted wordmark, so its output reads the same under
+  every console code page.
+- `aididit install` warns when the project's constitution is still Spec Kit's unfilled template,
+  because the panel judges scope against it.
+- The PII scan now covers `.svg` files.
+- The pack's lifecycle diagrams use the house style; its handoff sequence diagram is now a flowchart.
+- The lane workflow asks for the same Spec Kit range as the pack (`>=1.3.0,<2.0.0`).
+- The PII scan allows the project's published contact address and no other address on its domain.
+
+### Removed
+
+- `docs/pr-screenshots/`: before-and-after renders that only pull requests linked to.
+
+## [0.1.0] - 2026-11-05
+
+### Added
+
+- The A·I·DID·IT Spec Kit extension: seven lifecycle stages (Assemble, Ideate, Draft, Iterate,
+  Deliver, Investigate, Tidy) and seven simulated teammates (Product Owner, Architect, QA, DevSec,
+  DevOps, PR Prep, PR Review).
+- Shared references: lifecycle, lane contract, lane runner, practitioner panel, board adapters,
+  retro, and the TDD / BDD / Clean Code / Conventional Commits / prompt-crafting disciplines.
+- Board providers: markdown (default), GitHub Issues, Jira (via an Atlassian MCP server).
+- Lane runners: inline (default), claude (headless), claude-remote (observable sessions).
+- `aididit` CLI with `install`, `uninstall` and `doctor`, bundling Spec Kit 1.3+.
+- Single-lane Spec Kit workflow `aididit-lane` with a merge gate.
