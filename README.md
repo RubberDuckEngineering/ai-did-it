@@ -197,7 +197,7 @@ src/aididit/
     └── workflows/aididit-lane.yml
 docs/                         # the field guide (for people); the pack is for agents
 tests/                        # mirrors the slices, plus pack, diagram, link, PII and end-to-end suites
-tools/                        # maintainer tools: the release zip and the commit identity and time-zone checks
+tools/                        # maintainer tools: the release zip, the commit identity and time-zone checks, and the range CI checks
 ```
 
 ## 🧪 Developing
@@ -220,7 +220,8 @@ The suite has six layers:
 - **Link** tests resolve every relative link and every citation anchor.
 - **PII** tests keep personal data out of the repo, and `tools/check_commit_identity.py` keeps it
   out of commit authors and committers. `tools/check_commit_timezone.py` holds commits made as the
-  project to UTC, so their dates say when, never where.
+  project to UTC, so their dates say when, never where. CI runs both over the commits a pull request
+  or push brings (`tools/commit_range.py`), so a commit on `main` is judged once, when it lands.
 - **End-to-end** tests drive the real `specify` against a throwaway project.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the rules every change follows. They come from the pack

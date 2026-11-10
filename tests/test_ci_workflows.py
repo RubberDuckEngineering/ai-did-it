@@ -9,6 +9,8 @@ Acceptance criteria
   40-character commit SHA followed by a `# vX.Y.Z` release comment.
 - Given an action used in several places, when the workflows are read, then every use names the
   same commit, so no job is left behind on an old release.
+- Given the identity job, when it is read, then it asks `tools.commit_range` for the commits the
+  event brought before it runs either check, so a push is judged on what it pushed, not all history.
 """
 
 from __future__ import annotations
@@ -18,6 +20,7 @@ from collections import defaultdict
 from pathlib import Path
 
 import pytest
+import yaml
 
 WORKFLOWS = Path(__file__).resolve().parents[1] / ".github" / "workflows"
 USES = re.compile(r"^\s*-?\s*uses:\s*(?P<ref>\S+)(?P<rest>.*)$")
@@ -54,3 +57,16 @@ def test_one_action_runs_the_same_commit_everywhere():
         commits[action].add(version)
 
     assert {action: refs for action, refs in commits.items() if len(refs) > 1} == {}
+
+
+def test_the_identity_job_checks_only_the_commits_the_event_brought():
+    ci = yaml.safe_load((WORKFLOWS / "ci.yml").read_text(encoding="utf-8"))
+    identity = ci["jobs"]["identity"]
+    runs = [step.get("run", "") for step in identity["steps"]]
+    reads_range = [i for i, run in enumerate(runs) if "python -m tools.commit_range" in run]
+    checks = [i for i, run in enumerate(runs) if '--range "$RANGE"' in run]
+
+    assert "RANGE" not in identity.get("env", {}), "the job still sets its own range"
+    assert len(reads_range) == 1, "no step asks tools.commit_range for the range"
+    assert len(checks) == 2, "both checks read the range"
+    assert all(reads_range[0] < check for check in checks), "the range is read after a check ran"
