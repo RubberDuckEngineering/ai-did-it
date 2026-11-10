@@ -6,6 +6,8 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-11-10
+
 ### Fixed
 
 - **A Spec Kit install gets a board too.** `specify extension add`, the route the Spec Kit catalog

@@ -3,7 +3,7 @@ schema_version: "1.0"
 extension:
   id: "aididit"
   name: "A·I·DID·IT — Agile Expansion Pack"
-  version: "0.2.0"
+  version: "0.2.1"
   description: "Runs every work item through Assemble, Ideate, Draft, Iterate, Deliver, Investigate and Tidy, with a simulated agile team and a web-cited practitioner panel in place of human gates."
   author: "Rubber Duck Engineering"
   repository: "https://github.com/RubberDuckEngineering/rubber-duck-engineering-ai-did-it"
