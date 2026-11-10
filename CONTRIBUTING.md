@@ -3,6 +3,18 @@
 Thanks for helping. This project eats its own cooking: every change follows the same rules the
 pack asks of your agent.
 
+## How changes get in
+
+- **Anyone can open an issue.** Use the bug report or the pack improvement template. A lesson from
+  running the pack in your own repository is the most useful thing you can send.
+- **Pull requests are open to collaborators only.** The repository is set so that only people the
+  maintainers have added can open one. If you'd like to become a collaborator, say so in an issue.
+- **Every change to `main` goes through a pull request** with every CI check green, every review
+  thread resolved and an approval from the maintainers team, the code owner of every file,
+  given after its latest push. Nothing else can push
+  to `main`, rewrite it or delete it.
+- **Under the MIT licence** you can copy and adapt the pack in your own repository without asking.
+
 ## Setup
 
 ```bash
@@ -70,10 +82,19 @@ uv run ruff check src tests
 - **Commit in UTC.** A git date keeps your UTC offset, which narrows down where you live. Commit
   with `TZ=UTC` set (`TZ=UTC git commit ...` in Git Bash, or `$env:TZ = 'UTC'` first in
   PowerShell). `tools/check_commit_timezone.py` fails CI on a commit made as the project with any
-  other offset; contributors committing as themselves keep their own.
+  other offset; collaborators committing as themselves keep their own.
 - **The identity check in CI.** Store the private denylist as the `AIDIDIT_PII_DENYLIST` Actions
-  secret (one term per line). Without it the check is skipped with a warning, which is what
-  pull requests from forks see.
+  secret (one term per line). Without it the check is skipped with a warning.
+- **Repository protection.** Pull request creation is set to collaborators only. The `protect
+  main` ruleset blocks deleting or force-pushing `main` and requires a pull request with one
+  approval (given after the latest push) from a code owner, resolved threads and every CI job
+  green. `.github/CODEOWNERS` makes the `@RubberDuckEngineering/maintainers` team the owner of
+  every file; owners are always teams, never people (`tests/test_codeowners.py`), so who approves
+  is changed in the team, not in a commit. Only the admin
+  role bypasses it, which is what lets the local merge below land. GitHub Actions may not approve
+  pull requests, so a workflow cannot stand in for a maintainer. The ruleset names each CI job,
+  so renaming or adding a job means updating the ruleset in the same change, or that check waits
+  forever.
 - **Bumping an action.** Workflows pin every action to a full commit SHA with the release in a
   comment (`uses: owner/action@<sha> # vX.Y.Z`); `tests/test_ci_workflows.py` enforces it. To bump,
   resolve the release tag to its commit (`gh api repos/<owner>/<action>/git/ref/tags/<tag>`,

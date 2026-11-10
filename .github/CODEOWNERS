@@ -1,0 +1,3 @@
+# Every change needs an approval from the maintainers team (the `protect main` ruleset requires a
+# code owner's review). Owners are teams, never people: tests/test_codeowners.py checks this.
+* @RubberDuckEngineering/maintainers

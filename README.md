@@ -225,7 +225,8 @@ The suite has six layers:
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the rules every change follows. They come from the pack
 itself: TDD, [Conventional Commits](docs/sources.md#conventional-commits), and guards that can both
-fail and pass.
+fail and pass. Anyone can open an issue; pull requests are open to collaborators, and every change
+to `main` needs a maintainer's approval.
 
 ## 🙏 Credits
 
