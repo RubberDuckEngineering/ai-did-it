@@ -68,6 +68,10 @@ flowchart LR
   change to how the tests build commits, not to what they assert; their ten tests stayed green.
 - Rows 133 to 135 were added on 2026-11-10 with CODEOWNERS, through the same kind of harness. Each
   mutation edits `.github/CODEOWNERS`, never the test.
+- Rows 136 to 142 were added on 2026-11-10 when CI started checking each push over only the
+  commits it pushed, through the same kind of harness. Rows 136 to 140 edit
+  `tools/commit_range.py`; rows 141 and 142 edit `ci.yml`. No mutation edits a test. Rows 1 to 135
+  were not re-measured; the full suite was green on the same tree.
 - Each mutation was applied alone, the guarding tests were run, and the tree was restored before
   the next row.
 
@@ -208,6 +212,13 @@ flowchart LR
 | 133 | `tests/test_codeowners.py::test_every_file_is_owned_by_the_maintainers_team` | the catch-all `*` rule becomes `/src/` | green | red |
 | 134 | `tests/test_codeowners.py::test_every_owner_is_a_team_of_the_organization` | a person is added as an owner | green | red |
 | 135 | `tests/test_codeowners.py::test_every_owner_is_a_team_of_the_organization` | an email address is added as an owner | green | red |
+| 136 | `tests/tools/test_commit_range.py::test_a_pull_request_runs_from_its_base_to_its_head` | a pull request is checked from its head alone | green | red |
+| 137 | `tests/tools/test_commit_range.py::test_a_push_runs_from_before_it_to_after_it` | a push is checked over all of `HEAD` again | green | red |
+| 138 | `tests/tools/test_commit_range.py::test_a_push_that_creates_the_branch_runs_over_everything_it_reaches` | a push that creates the branch starts at the all-zeros commit | green | red |
+| 139 | `tests/tools/test_commit_range.py::test_main_prints_the_range_of_the_event_file` | `main` ignores the event's last commit and prints a range ending at `HEAD` | green | red |
+| 140 | `tests/tools/test_commit_range.py::test_a_commit_already_on_the_branch_is_not_judged_again` | a push is checked over everything its last commit reaches | green | red |
+| 141 | `tests/test_ci_workflows.py::test_the_identity_job_checks_only_the_commits_the_event_brought` | the `identity` job goes back to setting its own range, `HEAD` on a push | green | red |
+| 142 | `tests/test_ci_workflows.py::test_the_identity_job_checks_only_the_commits_the_event_brought` | the step that reads the range is removed | green | red |
 
 ## 📝 Notes on Specific Rows
 
@@ -251,6 +262,12 @@ mutations survive by design. The only way to report a bad source as MISSING is t
 same tree: one dated with the maintainer's local offset, which it failed on both dates, and its
 re-dated `+0000` copy, which it passed. The first was never merged and its branch is deleted.
 
+**Row 140 is why rows 136 to 142 exist.** A merge made with GitHub's button put a maintainer's
+profile name into `main` on 2026-11-10. The maintainer accepted it, but the push check read all of
+`HEAD`, so every later push to `main` would have failed on that one commit. Checking each push over
+`before..after` judges a commit once, when it lands. Row 140 replays that history in a throwaway
+repository: the accepted commit fails a whole-history check and is not read by the next push's.
+
 **Row 73 is the bug the tests found.** The first version applied NFKC before folding quotes.
 NFKC splits a double prime into two single primes, which then folded to `''` instead of `"`. The
 per-character fold test went red, and the fix was to fold first.
@@ -263,6 +280,11 @@ per-character fold test went red, and the fix was to fold first.
   creates the release is observed on the first real tag.
 - **The time-zone step in `ci.yml`.** Rows 125 to 132 cover the tool; that CI calls it, on the
   pull request's own range, is read from each run's `identity` job log, not from a kill row.
+- **What GitHub puts in the event.** Rows 136 to 142 check the range read from an event file and
+  that the job reads it before either check. That GitHub's push event carries `before` and `after`
+  as documented is read from the job's `checking <range>` line. A force-push whose `before` no
+  longer exists in the clone makes `git log` fail, so the job goes red rather than skip; that path
+  has not been observed.
 - **Who the code owners are.** Rows 133 to 135 check that CODEOWNERS names a team, not that the
   team exists, has write access or holds only the maintainers. GitHub reports an unknown or
   unwritable owner on the repository's CODEOWNERS errors endpoint, which is read after each change.

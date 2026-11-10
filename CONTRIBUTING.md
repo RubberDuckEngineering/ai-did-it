@@ -84,7 +84,10 @@ uv run ruff check src tests
   PowerShell). `tools/check_commit_timezone.py` fails CI on a commit made as the project with any
   other offset; collaborators committing as themselves keep their own.
 - **The identity check in CI.** Store the private denylist as the `AIDIDIT_PII_DENYLIST` Actions
-  secret (one term per line). Without it the check is skipped with a warning.
+  secret (one term per line). Without it the check is skipped with a warning. Both history checks
+  read the commits the event brings, from `tools/commit_range.py`: a pull request's base to its
+  head, or a push's commit before to its commit after. A commit already on `main` is judged once,
+  when it lands, so accepting one doesn't turn every later push red.
 - **Repository protection.** Pull request creation is set to collaborators only. The `protect
   main` ruleset blocks deleting or force-pushing `main` and requires a pull request with one
   approval (given after the latest push) from a code owner, resolved threads and every CI job
