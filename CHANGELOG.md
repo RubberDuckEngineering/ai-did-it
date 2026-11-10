@@ -6,6 +6,8 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-11-10
+
 ### Fixed
 
 - **Links name the renamed repository.** The repository is now `RubberDuckEngineering/ai-did-it`.

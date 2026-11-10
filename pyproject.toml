@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ai-did-it"
-version = "0.2.1"
+version = "0.2.2"
 description = "A·I·DID·IT — an agile expansion pack for GitHub Spec Kit: seven lifecycle stages, a simulated agile team, and a practitioner panel that runs the whole delivery loop."
 readme = "README.md"
 license = "MIT"
