@@ -6,6 +6,13 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Fixed
+
+- **Links name the renamed repository.** The repository is now `RubberDuckEngineering/ai-did-it`.
+  The package metadata, the extension manifest the Spec Kit catalog reads, the README and the issue
+  template still used the old name, which works only while GitHub's redirect lasts. A test now
+  reads every tracked file for links into the organisation.
+
 ## [0.2.1] - 2026-11-10
 
 ### Fixed
