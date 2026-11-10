@@ -30,17 +30,20 @@ jobs:
       - run: uv run pytest --cov=aididit --cov=tools
 
   identity:
-    name: commit identity holds no private term
+    name: commit identity and dates leak nothing
     runs-on: ubuntu-latest
+    env:
+      RANGE: ${{ github.event_name == 'pull_request' && format('{0}..{1}', github.event.pull_request.base.sha, github.event.pull_request.head.sha) || 'HEAD' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
       - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+      - name: check that commits made as the project are dated in UTC
+        run: uv run python -m tools.check_commit_timezone --range "$RANGE"
       - name: check every commit's author and committer
         env:
           DENYLIST: ${{ secrets.AIDIDIT_PII_DENYLIST }}
-          RANGE: ${{ github.event_name == 'pull_request' && format('{0}..{1}', github.event.pull_request.base.sha, github.event.pull_request.head.sha) || 'HEAD' }}
         run: |
           if [ -z "$DENYLIST" ]; then
             echo "::warning::AIDIDIT_PII_DENYLIST is not set; commit identities were not checked"

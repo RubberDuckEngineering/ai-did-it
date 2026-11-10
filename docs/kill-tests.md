@@ -62,6 +62,10 @@ flowchart LR
 - Rows 121 to 124 were added on 2026-11-10 when the workflows' actions were pinned to commits,
   through the same kind of harness. Each mutation edits a workflow file, never the test. Rows 1 to
   120 were not re-measured; the full suite was green on the same tree.
+- Rows 125 to 132 were added on 2026-11-10 with the time-zone check, through the same kind of
+  harness. Each mutation edits `tools/check_commit_timezone.py`, never a test. Rows 112 to 117 were
+  not re-measured after their tests moved to the shared `tests/tools/git_history.py` helper, a
+  change to how the tests build commits, not to what they assert; their ten tests stayed green.
 - Each mutation was applied alone, the guarding tests were run, and the tree was restored before
   the next row.
 
@@ -191,6 +195,14 @@ flowchart LR
 | 122 | `tests/test_ci_workflows.py::test_every_action_is_pinned_to_a_commit_with_its_release_named` | one `setup-uv` step goes back to the movable tag `@v10.3.3` | green | red |
 | 123 | `tests/test_ci_workflows.py::test_every_action_is_pinned_to_a_commit_with_its_release_named` | one `setup-uv` step loses its `# v10.3.3` comment | green | red |
 | 124 | `tests/test_ci_workflows.py::test_one_action_runs_the_same_commit_everywhere` | `release.yml` checks out with v6.1.0's commit while `ci.yml` uses v7.0.1's | green | red |
+| 125 | `tests/tools/test_check_commit_timezone.py::test_a_project_date_with_a_local_offset_is_a_leak` | the committer date is no longer checked | green | red |
+| 126 | `tests/tools/test_check_commit_timezone.py::test_project_commits_dated_in_utc_pass` | the offset is read as the whole raw date, so no project date is ever UTC | green | red |
+| 127 | `tests/tools/test_check_commit_timezone.py::test_only_the_project_side_of_a_commit_is_held_to_utc` | a project address on either side holds both dates to UTC | green | red |
+| 128 | `tests/tools/test_check_commit_timezone.py::test_a_contributor_keeps_their_own_time_zone` | every address counts as the project's | green | red |
+| 129 | `tests/tools/test_check_commit_timezone.py::test_the_project_address_matches_in_any_letter_case` | the address is compared without folding case | green | red |
+| 130 | `tests/tools/test_check_commit_timezone.py::test_a_hit_fails_without_printing_the_offset` | a hit prints the offset it found | green | red |
+| 131 | `tests/tools/test_check_commit_timezone.py::test_a_clean_history_passes_through_main` | `main` fails even when nothing was found | green | red |
+| 132 | `tests/tools/test_check_commit_timezone.py::test_only_commits_in_the_range_are_read` | the range is replaced by `--all` | green | red |
 
 ## 📝 Notes on Specific Rows
 
@@ -230,6 +242,10 @@ positive control; an unexpected exception falls into the crash net. Both still e
 mutations survive by design. The only way to report a bad source as MISSING is to change how
 `main` maps failures to exit codes, so that is the mutation these three rows apply.
 
+**Rows 125 to 132 also have a real-world control.** The check was run on two real commits with the
+same tree: one dated with the maintainer's local offset, which it failed on both dates, and its
+re-dated `+0000` copy, which it passed. The first was never merged and its branch is deleted.
+
 **Row 73 is the bug the tests found.** The first version applied NFKC before folding quotes.
 NFKC splits a double prime into two single primes, which then folded to `''` instead of `"`. The
 per-character fold test went red, and the fix was to fold first.
@@ -240,6 +256,8 @@ per-character fold test went red, and the fix was to fold first.
   GitHub. Rows 106 to 117 cover the tools they call. The secret was observed reaching the
   `identity` job on 2026-11-10, when it checked 1 commit and printed no term. Whether a tag push
   creates the release is observed on the first real tag.
+- **The time-zone step in `ci.yml`.** Rows 125 to 132 cover the tool; that CI calls it, on the
+  pull request's own range, is read from each run's `identity` job log, not from a kill row.
 - **What a pinned commit runs.** Rows 121 to 124 check that each action is pinned to a commit and
   named, not what that commit contains. The Node 24 runtime of both pins was read from each
   action's `action.yml` at the pinned commit on 2026-11-10. A future bump needs the same check by

@@ -16,39 +16,19 @@ Acceptance criteria
 
 from __future__ import annotations
 
-import os
-import subprocess
 from pathlib import Path
 
 import pytest
 
+from tests.tools.git_history import CLEAN, commit, git
 from tools.check_commit_identity import Identity, find_leaks, main, read_identities
 
-CLEAN = ("Rubber Duck Engineering", "maintainers@example.com")
 TERMS = ["zanzibar quokka", "wombat-77"]  # made up; never a real person
-
-
-def _git(repo: Path, *args: str, env: dict[str, str] | None = None) -> str:
-    return subprocess.run(
-        ["git", *args], cwd=repo, env=env, check=True, capture_output=True, text=True
-    ).stdout.strip()
-
-
-def _commit(repo: Path, message: str, author=CLEAN, committer=CLEAN) -> str:
-    env = {
-        **os.environ,
-        "GIT_AUTHOR_NAME": author[0],
-        "GIT_AUTHOR_EMAIL": author[1],
-        "GIT_COMMITTER_NAME": committer[0],
-        "GIT_COMMITTER_EMAIL": committer[1],
-    }
-    _git(repo, "commit", "--allow-empty", "--no-gpg-sign", "-q", "-m", message, env=env)
-    return _git(repo, "rev-parse", "HEAD")
 
 
 @pytest.fixture
 def repo(tmp_path) -> Path:
-    _git(tmp_path, "init", "-q")
+    git(tmp_path, "init", "-q")
     return tmp_path
 
 
@@ -60,8 +40,8 @@ def denylist(tmp_path) -> Path:
 
 
 def test_identities_without_a_denylist_term_pass(repo):
-    _commit(repo, "feat: one")
-    _commit(repo, "fix: two")
+    commit(repo, "feat: one")
+    commit(repo, "fix: two")
 
     assert find_leaks(read_identities(repo, "HEAD"), TERMS) == []
 
@@ -76,8 +56,8 @@ def test_identities_without_a_denylist_term_pass(repo):
     ],
 )
 def test_a_denylist_term_in_any_identity_field_is_a_leak(repo, field, author, committer):
-    _commit(repo, "feat: clean")
-    sha = _commit(repo, "fix: leaky", author=author, committer=committer)
+    commit(repo, "feat: clean")
+    sha = commit(repo, "fix: leaky", author=author, committer=committer)
 
     leaks = find_leaks(read_identities(repo, "HEAD"), TERMS)
 
@@ -86,7 +66,7 @@ def test_a_denylist_term_in_any_identity_field_is_a_leak(repo, field, author, co
 
 
 def test_a_leak_names_the_denylist_line_without_echoing_the_term(repo, denylist, capsys):
-    _commit(repo, "fix: leaky", author=("Wombat-77", CLEAN[1]))
+    commit(repo, "fix: leaky", author=("Wombat-77", CLEAN[1]))
 
     code = main(["--repo", str(repo), "--denylist", str(denylist), "--range", "HEAD"])
     printed = capsys.readouterr()
@@ -98,14 +78,14 @@ def test_a_leak_names_the_denylist_line_without_echoing_the_term(repo, denylist,
 
 
 def test_a_clean_history_passes_through_main(repo, denylist, capsys):
-    _commit(repo, "feat: clean")
+    commit(repo, "feat: clean")
 
     assert main(["--repo", str(repo), "--denylist", str(denylist), "--range", "HEAD"]) == 0
     assert "1 commit" in capsys.readouterr().out
 
 
 def test_an_empty_denylist_refuses_to_pass(repo, tmp_path, capsys):
-    _commit(repo, "feat: clean")
+    commit(repo, "feat: clean")
     empty = tmp_path.parent / f"{tmp_path.name}-empty.txt"
     empty.write_text("\n  \n", encoding="utf-8")
 
@@ -114,9 +94,9 @@ def test_an_empty_denylist_refuses_to_pass(repo, tmp_path, capsys):
 
 
 def test_only_commits_in_the_range_are_read(repo):
-    _commit(repo, "fix: leaky, before the range", author=("Zanzibar Quokka", CLEAN[1]))
-    base = _commit(repo, "feat: base")
-    head = _commit(repo, "feat: inside the range")
+    commit(repo, "fix: leaky, before the range", author=("Zanzibar Quokka", CLEAN[1]))
+    base = commit(repo, "feat: base")
+    head = commit(repo, "feat: inside the range")
 
     identities = read_identities(repo, f"{base}..{head}")
 
@@ -125,7 +105,7 @@ def test_only_commits_in_the_range_are_read(repo):
 
 
 def test_an_identity_holds_all_four_fields(repo):
-    _commit(repo, "feat: one", author=("A Name", "a@example.com"), committer=("C Name", "c@example.com"))
+    commit(repo, "feat: one", author=("A Name", "a@example.com"), committer=("C Name", "c@example.com"))
 
     (identity,) = read_identities(repo, "HEAD")
 

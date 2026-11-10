@@ -6,6 +6,13 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **A time-zone check.** `tools/check_commit_timezone.py` fails when a commit made as the project
+  (author or committer `admin@rubberduckengineering.com`) is dated with any offset but `+0000`, and
+  CI runs it on every push and pull request. A hit names the commit and which date, never the
+  offset. Contributors committing as themselves keep their own offset.
+
 ### Changed
 
 - **CI actions run on Node 24 and are pinned to commits.** `actions/checkout` moves from v4 to

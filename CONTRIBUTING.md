@@ -67,6 +67,10 @@ uv run ruff check src tests
 - **Commit identity.** Commit as the project, not as yourself:
   `git config user.name "Rubber Duck Engineering"` and
   `git config user.email admin@rubberduckengineering.com` in your clone.
+- **Commit in UTC.** A git date keeps your UTC offset, which narrows down where you live. Commit
+  with `TZ=UTC` set (`TZ=UTC git commit ...` in Git Bash, or `$env:TZ = 'UTC'` first in
+  PowerShell). `tools/check_commit_timezone.py` fails CI on a commit made as the project with any
+  other offset; contributors committing as themselves keep their own.
 - **The identity check in CI.** Store the private denylist as the `AIDIDIT_PII_DENYLIST` Actions
   secret (one term per line). Without it the check is skipped with a warning, which is what
   pull requests from forks see.
