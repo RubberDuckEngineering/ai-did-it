@@ -66,6 +66,8 @@ flowchart LR
   harness. Each mutation edits `tools/check_commit_timezone.py`, never a test. Rows 112 to 117 were
   not re-measured after their tests moved to the shared `tests/tools/git_history.py` helper, a
   change to how the tests build commits, not to what they assert; their ten tests stayed green.
+- Rows 133 to 135 were added on 2026-11-10 with CODEOWNERS, through the same kind of harness. Each
+  mutation edits `.github/CODEOWNERS`, never the test.
 - Each mutation was applied alone, the guarding tests were run, and the tree was restored before
   the next row.
 
@@ -203,6 +205,9 @@ flowchart LR
 | 130 | `tests/tools/test_check_commit_timezone.py::test_a_hit_fails_without_printing_the_offset` | a hit prints the offset it found | green | red |
 | 131 | `tests/tools/test_check_commit_timezone.py::test_a_clean_history_passes_through_main` | `main` fails even when nothing was found | green | red |
 | 132 | `tests/tools/test_check_commit_timezone.py::test_only_commits_in_the_range_are_read` | the range is replaced by `--all` | green | red |
+| 133 | `tests/test_codeowners.py::test_every_file_is_owned_by_the_maintainers_team` | the catch-all `*` rule becomes `/src/` | green | red |
+| 134 | `tests/test_codeowners.py::test_every_owner_is_a_team_of_the_organization` | a person is added as an owner | green | red |
+| 135 | `tests/test_codeowners.py::test_every_owner_is_a_team_of_the_organization` | an email address is added as an owner | green | red |
 
 ## 📝 Notes on Specific Rows
 
@@ -258,6 +263,9 @@ per-character fold test went red, and the fix was to fold first.
   creates the release is observed on the first real tag.
 - **The time-zone step in `ci.yml`.** Rows 125 to 132 cover the tool; that CI calls it, on the
   pull request's own range, is read from each run's `identity` job log, not from a kill row.
+- **Who the code owners are.** Rows 133 to 135 check that CODEOWNERS names a team, not that the
+  team exists, has write access or holds only the maintainers. GitHub reports an unknown or
+  unwritable owner on the repository's CODEOWNERS errors endpoint, which is read after each change.
 - **What a pinned commit runs.** Rows 121 to 124 check that each action is pinned to a commit and
   named, not what that commit contains. The Node 24 runtime of both pins was read from each
   action's `action.yml` at the pinned commit on 2026-11-10. A future bump needs the same check by

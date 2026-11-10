@@ -19,6 +19,10 @@ All notable changes to this project are documented here. The format follows
   v7.0.1 and `astral-sh/setup-uv` from v6 to v10.3.3, which clears GitHub's Node.js 20 deprecation
   warning. Each `uses:` names a full commit SHA with the release in a comment, so a moved tag
   cannot change what CI runs. `tests/test_ci_workflows.py` checks every workflow for this.
+- **Pull requests are open to collaborators only.** Anyone can still open an issue. Every change
+  to `main` needs a pull request with green CI, resolved threads and an approval from the
+  maintainers team, which `.github/CODEOWNERS` makes the owner of every file. CONTRIBUTING and the
+  README now say so, and CONTRIBUTING describes the `protect main` ruleset.
 
 ## [0.2.0] - 2026-11-09
 
