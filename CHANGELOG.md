@@ -6,6 +6,16 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Fixed
+
+- **A Spec Kit install gets a board too.** `specify extension add`, the route the Spec Kit catalog
+  uses, never seeded `.specify/aididit/board.md`, and only `aididit install` did. The markdown board
+  provider now has a Step 0, like the github and jira providers: it copies the starter board when
+  none is there and never overwrites one that is. The README describes both install routes.
+- **The starter board's demo item is `AID-0`.** It was `AID-1`, the id a user's first item should
+  get, so a lookup for a real `AID-1` could find the demo. The next-id rule is unchanged, and a
+  user's first item is now `AID-1`.
+
 ### Added
 
 - **A time-zone check.** `tools/check_commit_timezone.py` fails when a commit made as the project

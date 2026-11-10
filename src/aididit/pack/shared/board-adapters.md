@@ -75,8 +75,13 @@ Board triage (Tidy) promotes and demotes items between Backlog and Ready with `m
 
 ## 3. Provider: markdown (default)
 
-The board is one Markdown file at `board.markdown_path`. The starter file is copied from
-`.specify/extensions/aididit/templates/board.md` at install time.
+The board is one Markdown file at `board.markdown_path`. `aididit install` seeds it; an install
+with `specify extension add` (the Spec Kit catalog's route) does not, so this provider's Step 0 does.
+
+**Step 0 for this provider:** if no file exists at `board.markdown_path`, copy
+`.specify/extensions/aididit/templates/board.md` there, creating its folder if needed, and say
+"seeded a starter board at <path>". Never overwrite a board that is already there, however empty:
+it is the user's. The seeded board is runtime state like any other board edit, so nothing commits it.
 
 ### File format
 
@@ -137,7 +142,8 @@ Format rules:
   Timestamp is UTC `YYYY-MM-DDTHH:MMZ`. A multi-line comment continues on following lines that
   start with `> ` and carry no timestamp. Comments are append-only.
 - **Ids**: `AID-<n>`, sequential. The next id is 1 + the highest `n` found in any `### AID-<n>`
-  heading anywhere in the file (all columns, Done included). Ids are never reused, so items are
+  heading anywhere in the file (all columns, Done included). The starter board's demo item is
+  `AID-0`, so a user's first item is `AID-1`. Ids are never reused, so items are
   never deleted; a declined or delivered item stays in Done.
 - **Priority**: order within Ready is priority order. The top item is next.
 
