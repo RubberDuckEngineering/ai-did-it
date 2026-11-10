@@ -86,26 +86,26 @@ uv run ruff check src tests
   PowerShell). `tools/check_commit_timezone.py` fails CI on a commit made as the project with any
   other offset; collaborators committing as themselves keep their own.
 - **The identity check in CI.** Store the private denylist as the `AIDIDIT_PII_DENYLIST` Actions
-  secret (one term per line: real names and private terms, not GitHub handles). Without it the check
-  is skipped with a warning. Both history checks read the commits the event brings, from
-  `tools/commit_range.py`: a pull request's base to its head, or a push's commit before to its
-  commit after. A commit already on `main` is judged once, when it lands, so accepting one doesn't
-  turn every later push red.
-- **Repository protection.** Pull request creation is set to collaborators only. The `protect
-  main` ruleset blocks deleting or force-pushing `main` and requires a pull request with one
-  approval (given after the latest push) from a code owner, resolved threads and every CI job
-  green. `.github/CODEOWNERS` makes the `@RubberDuckEngineering/maintainers` team the owner of
-  every file; owners are always teams, never people (`tests/test_codeowners.py`), so who approves
-  is changed in the team, not in a commit. Only the admin
-  role bypasses it, which is what lets the local merge below land. GitHub Actions may not approve
-  pull requests, so a workflow cannot stand in for a maintainer. The ruleset names each CI job,
-  so renaming or adding a job means updating the ruleset in the same change, or that check waits
-  forever.
+  secret (one term per line: real names and private terms, not GitHub handles, and not the names of
+  maintainers who merge with GitHub's button). Without it the check is skipped with a warning. Both
+  history checks read the commits the event brings, from `tools/commit_range.py`: a pull request's
+  base to its head, or a push's commit before to its commit after. A commit already on `main` is
+  judged once, when it lands, so accepting one doesn't turn every later push red.
+- **Repository protection.** Pull request creation is set to collaborators only. The `protect main`
+  ruleset blocks deleting or force-pushing `main` and requires a pull request with one approval
+  (given after the latest push) from a code owner, resolved threads and every CI job green.
+  `.github/CODEOWNERS` makes the `@RubberDuckEngineering/maintainers` team the owner of every file;
+  owners are always teams, never people (`tests/test_codeowners.py`), so who approves is changed in
+  the team, not in a commit. Only the admin role bypasses it, which is what lets a maintainer merge
+  their own pull request. GitHub Actions may not approve pull requests, so a workflow cannot stand
+  in for a maintainer. The ruleset names each CI job, so renaming or adding a job means updating the
+  ruleset in the same change, or that check waits forever.
 - **Bumping an action.** Workflows pin every action to a full commit SHA with the release in a
   comment (`uses: owner/action@<sha> # vX.Y.Z`); `tests/test_ci_workflows.py` enforces it. To bump,
   resolve the release tag to its commit (`gh api repos/<owner>/<action>/git/ref/tags/<tag>`,
   following an annotated tag to its commit), check that commit's `action.yml` runtime, and update
   every use of that action at once.
-- **Merging.** GitHub's merge buttons write the merging account's profile name into the commit
-  they create. To keep that name out of history, merge locally with `git merge --ff-only` after
-  rebasing the branch, and push `main`.
+- **Merging.** GitHub's merge button is fine. It writes the merging account's profile name and
+  local time zone into the merge commit it creates, which maintainers accept for their own
+  merges. To keep your name out of history instead, merge locally with `git merge --ff-only` after
+  rebasing the branch, and push `main`. Either way, the push to `main` checks the new commits.
