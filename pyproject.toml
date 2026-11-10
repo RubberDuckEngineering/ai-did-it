@@ -26,9 +26,9 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/RubberDuckEngineering/rubber-duck-engineering-ai-did-it"
-Issues = "https://github.com/RubberDuckEngineering/rubber-duck-engineering-ai-did-it/issues"
-Changelog = "https://github.com/RubberDuckEngineering/rubber-duck-engineering-ai-did-it/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/RubberDuckEngineering/ai-did-it"
+Issues = "https://github.com/RubberDuckEngineering/ai-did-it/issues"
+Changelog = "https://github.com/RubberDuckEngineering/ai-did-it/blob/main/CHANGELOG.md"
 
 [project.scripts]
 aididit = "aididit.cli:main"

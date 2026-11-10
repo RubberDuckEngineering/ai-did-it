@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/RubberDuckEngineering/rubber-duck-engineering-ai-did-it/actions/workflows/ci.yml"><img src="https://github.com/RubberDuckEngineering/rubber-duck-engineering-ai-did-it/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/RubberDuckEngineering/ai-did-it/actions/workflows/ci.yml"><img src="https://github.com/RubberDuckEngineering/ai-did-it/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-FFD23F?labelColor=1B2A41" alt="License: MIT"></a>
   <a href="https://github.com/github/spec-kit"><img src="https://img.shields.io/badge/Spec%20Kit-1.3%2B-0F6B5C?labelColor=1B2A41" alt="Spec Kit 1.3+"></a>
 </p>
@@ -65,7 +65,7 @@ You need Python 3.11 or later, [uv](https://docs.astral.sh/uv/), git, and a codi
 Kit supports (Claude Code, GitHub Copilot, Gemini CLI, Codex, Cursor, opencode and more).
 
 ```bash
-uv tool install git+https://github.com/RubberDuckEngineering/rubber-duck-engineering-ai-did-it
+uv tool install git+https://github.com/RubberDuckEngineering/ai-did-it
 ```
 
 That one command installs the `aididit` CLI **and** Spec Kit (`specify-cli` 1.3+) into the same tool
@@ -172,7 +172,7 @@ conflict over it.
 | `aididit --version` | Print the version |
 
 Already living in Spec Kit and prefer its own tooling? Run `specify extension add aididit --from
-<zip URL>` with the `aididit-vX.Y.Z.zip` asset of [the latest release](https://github.com/RubberDuckEngineering/rubber-duck-engineering-ai-did-it/releases/latest),
+<zip URL>` with the `aididit-vX.Y.Z.zip` asset of [the latest release](https://github.com/RubberDuckEngineering/ai-did-it/releases/latest),
 or clone this repo and run `specify extension add --dev src/aididit/pack`. Either way, the first
 stage that reads the markdown board creates `.specify/aididit/board.md` from the starter template
 if it is missing, and never overwrites one that is there.

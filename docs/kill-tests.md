@@ -230,6 +230,8 @@ flowchart LR
 | 147 | `tests/pack/test_board_setup.py::test_the_markdown_step_0_seeds_a_missing_board_from_the_starter_template` | Step 0 no longer forbids overwriting an existing board | green | red |
 | 148 | `tests/pack/test_board_setup.py::test_a_users_first_item_on_the_starter_board_is_aid_1` | the demo item goes back to `AID-1` | green | red |
 | 149 | `tests/pack/test_board_setup.py::test_a_users_first_item_on_the_starter_board_is_aid_1` | a second demo item `AID-1` is added beside `AID-0` | green | red |
+| 150 | `tests/test_repo_links.py::test_every_organisation_link_names_a_current_repository` | the package's Homepage goes back to the pre-rename repository name | green | red |
+| 151 | `tests/test_repo_links.py::test_every_organisation_link_names_a_current_repository` | a link to an unknown repository is added to `CONTRIBUTING.md`, a file that never held one | green | red |
 
 ## 📝 Notes on Specific Rows
 
@@ -279,6 +281,10 @@ profile name into `main` on 2026-11-10. The maintainer accepted it, but the push
 `before..after` judges a commit once, when it lands. Row 140 replays that history in a throwaway
 repository: the accepted commit fails a whole-history check and is not read by the next push's.
 
+**Row 151 is why the test reads every tracked file.** The rename left the old name in four files,
+and a list of those four would pass the next file to pick up a link. Before the fix the test was
+seen red on all ten stale links, and both rows' mutations are applied outside the test.
+
 **Row 73 is the bug the tests found.** The first version applied NFKC before folding quotes.
 NFKC splits a double prime into two single primes, which then folded to `''` instead of `"`. The
 per-character fold test went red, and the fix was to fold first.
@@ -293,8 +299,9 @@ per-character fold test went red, and the fix was to fold first.
   pull request's own range, is read from each run's `identity` job log, not from a kill row.
 - **An agent obeying the markdown Step 0.** Rows 143 to 147 check what the adapter says, not
   that an agent reading it creates the board. The gap was found on 2026-11-10 by a headless run of
-  all 14 commands on a `specify extension add` install of v0.2.0. Whether a stage now seeds the
-  board on that route is observed by the same kind of run on the next release.
+  all 14 commands on a `specify extension add` install of v0.2.0. On v0.2.1, installed the same
+  way, a headless Assemble run created the board byte-identical to the starter template, found
+  Ready empty and stopped without a commit. Each release is observed the same way.
 - **What GitHub puts in the event.** Rows 136 to 142 check the range read from an event file and
   that the job reads it before either check. That GitHub's push event carries `before` and `after`
   as documented is read from the job's `checking <range>` line. A force-push whose `before` no
