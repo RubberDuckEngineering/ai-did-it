@@ -171,9 +171,11 @@ conflict over it.
 | `aididit doctor` | Check Python, Spec Kit, git (required) and gh, claude (optional) |
 | `aididit --version` | Print the version |
 
-Already living in Spec Kit and prefer its own tooling? Clone this repo and run
-`specify extension add --dev src/aididit/pack` from your project. Note that the board seeding is
-then yours to do: copy `templates/board.md` to `.specify/aididit/board.md`.
+Already living in Spec Kit and prefer its own tooling? Run `specify extension add aididit --from
+<zip URL>` with the `aididit-vX.Y.Z.zip` asset of [the latest release](https://github.com/RubberDuckEngineering/rubber-duck-engineering-ai-did-it/releases/latest),
+or clone this repo and run `specify extension add --dev src/aididit/pack`. Either way, the first
+stage that reads the markdown board creates `.specify/aididit/board.md` from the starter template
+if it is missing, and never overwrites one that is there.
 
 ## 🗂️ Repository Layout
 

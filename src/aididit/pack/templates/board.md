@@ -6,6 +6,7 @@ Format and rules: .specify/extensions/aididit/shared/board-adapters.md
 - One "## <Column>" heading per column, in this order. Do not rename or reorder them.
 - Each work item is a "### AID-<n> — <title>" block inside its column.
 - Next id = 1 + the highest AID number anywhere in this file. Never reuse an id.
+- The demo item below is AID-0, so your first item is AID-1.
 - Moving an item = cut its whole block and paste it at the bottom of the target column.
 - Comments are appended "> <timestamp> <stage>: <text>" lines at the end of the item.
 - Ready is ordered by priority: the top item is the next one to work.
@@ -13,7 +14,7 @@ Format and rules: .specify/extensions/aididit/shared/board-adapters.md
 
 ## Backlog
 
-### AID-1 — Add a /health endpoint
+### AID-0 — Add a /health endpoint
 
 - labels: story
 - blocks: none

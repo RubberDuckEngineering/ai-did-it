@@ -72,6 +72,10 @@ flowchart LR
   commits it pushed, through the same kind of harness. Rows 136 to 140 edit
   `tools/commit_range.py`; rows 141 and 142 edit `ci.yml`. No mutation edits a test. Rows 1 to 135
   were not re-measured; the full suite was green on the same tree.
+- Rows 143 to 149 were added on 2026-11-10 with the markdown board's Step 0 and the `AID-0` demo
+  item, through the same kind of harness. Rows 143 to 147 edit `shared/board-adapters.md`; rows
+  148 and 149 edit `templates/board.md`. No mutation edits a test. Rows 1 to 142 were not
+  re-measured; the full suite was green on the same tree.
 - Each mutation was applied alone, the guarding tests were run, and the tree was restored before
   the next row.
 
@@ -219,6 +223,13 @@ flowchart LR
 | 140 | `tests/tools/test_commit_range.py::test_a_commit_already_on_the_branch_is_not_judged_again` | a push is checked over everything its last commit reaches | green | red |
 | 141 | `tests/test_ci_workflows.py::test_the_identity_job_checks_only_the_commits_the_event_brought` | the `identity` job goes back to setting its own range, `HEAD` on a push | green | red |
 | 142 | `tests/test_ci_workflows.py::test_the_identity_job_checks_only_the_commits_the_event_brought` | the step that reads the range is removed | green | red |
+| 143 | `tests/pack/test_board_setup.py::test_every_board_provider_states_its_step_0[markdown]` | the markdown provider's Step 0 is removed | green | red |
+| 144 | `tests/pack/test_board_setup.py::test_every_board_provider_states_its_step_0[github]` | the github provider's Step 0 loses its label | green | red |
+| 145 | `tests/pack/test_board_setup.py::test_every_board_provider_states_its_step_0[jira]` | the jira provider's Step 0 loses its label | green | red |
+| 146 | `tests/pack/test_board_setup.py::test_the_markdown_step_0_seeds_a_missing_board_from_the_starter_template` | Step 0 copies from a template path that is not the starter board | green | red |
+| 147 | `tests/pack/test_board_setup.py::test_the_markdown_step_0_seeds_a_missing_board_from_the_starter_template` | Step 0 no longer forbids overwriting an existing board | green | red |
+| 148 | `tests/pack/test_board_setup.py::test_a_users_first_item_on_the_starter_board_is_aid_1` | the demo item goes back to `AID-1` | green | red |
+| 149 | `tests/pack/test_board_setup.py::test_a_users_first_item_on_the_starter_board_is_aid_1` | a second demo item `AID-1` is added beside `AID-0` | green | red |
 
 ## 📝 Notes on Specific Rows
 
@@ -280,6 +291,10 @@ per-character fold test went red, and the fix was to fold first.
   creates the release is observed on the first real tag.
 - **The time-zone step in `ci.yml`.** Rows 125 to 132 cover the tool; that CI calls it, on the
   pull request's own range, is read from each run's `identity` job log, not from a kill row.
+- **An agent obeying the markdown Step 0.** Rows 143 to 147 check what the adapter says, not
+  that an agent reading it creates the board. The gap was found on 2026-11-10 by a headless run of
+  all 14 commands on a `specify extension add` install of v0.2.0. Whether a stage now seeds the
+  board on that route is observed by the same kind of run on the next release.
 - **What GitHub puts in the event.** Rows 136 to 142 check the range read from an event file and
   that the job reads it before either check. That GitHub's push event carries `before` and `after`
   as documented is read from the job's `checking <range>` line. A force-push whose `before` no
