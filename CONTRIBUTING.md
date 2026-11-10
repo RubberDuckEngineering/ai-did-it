@@ -70,6 +70,11 @@ uv run ruff check src tests
 - **The identity check in CI.** Store the private denylist as the `AIDIDIT_PII_DENYLIST` Actions
   secret (one term per line). Without it the check is skipped with a warning, which is what
   pull requests from forks see.
+- **Bumping an action.** Workflows pin every action to a full commit SHA with the release in a
+  comment (`uses: owner/action@<sha> # vX.Y.Z`); `tests/test_ci_workflows.py` enforces it. To bump,
+  resolve the release tag to its commit (`gh api repos/<owner>/<action>/git/ref/tags/<tag>`,
+  following an annotated tag to its commit), check that commit's `action.yml` runtime, and update
+  every use of that action at once.
 - **Merging.** GitHub's merge buttons write the merging account's profile name into the commit
   they create. To keep that name out of history, merge locally with `git merge --ff-only` after
   rebasing the branch, and push `main`.

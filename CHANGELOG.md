@@ -6,6 +6,13 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Changed
+
+- **CI actions run on Node 24 and are pinned to commits.** `actions/checkout` moves from v4 to
+  v7.0.1 and `astral-sh/setup-uv` from v6 to v10.3.3, which clears GitHub's Node.js 20 deprecation
+  warning. Each `uses:` names a full commit SHA with the release in a comment, so a moved tag
+  cannot change what CI runs. `tests/test_ci_workflows.py` checks every workflow for this.
+
 ## [0.2.0] - 2026-11-09
 
 ### Added

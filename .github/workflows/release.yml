@@ -12,8 +12,8 @@ jobs:
     name: attach the pack zip to a release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
       - run: uv sync
       - name: build the zip, refusing a tag that disagrees with the pack version
         run: uv run python -m tools.build_pack_zip --out "dist/aididit-${GITHUB_REF_NAME}.zip" --expect-version "$GITHUB_REF_NAME"

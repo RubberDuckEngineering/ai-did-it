@@ -59,6 +59,9 @@ flowchart LR
   of harness. A mutated run counted as red only when pytest reported an assertion failure, not
   a collection error. Rows 1 to 105 were not re-measured; the full suite, e2e included, was
   green on the same tree.
+- Rows 121 to 124 were added on 2026-11-10 when the workflows' actions were pinned to commits,
+  through the same kind of harness. Each mutation edits a workflow file, never the test. Rows 1 to
+  120 were not re-measured; the full suite was green on the same tree.
 - Each mutation was applied alone, the guarding tests were run, and the tree was restored before
   the next row.
 
@@ -184,6 +187,10 @@ flowchart LR
 | 118 | `tests/pack/test_pack_contract.py::test_lane_workflow_asks_for_the_same_spec_kit_range_as_the_pack` | the lane workflow's Spec Kit range drops its `<2.0.0` cap | green | red |
 | 119 | `tests/test_readme.py::test_the_quick_start_names_the_python_floor_before_the_install_command` | the README names Python 3.10 | green | red |
 | 120 | `tests/test_no_pii.py::test_no_email_addresses` | the code of conduct names another address on the project's domain | green | red |
+| 121 | `tests/test_ci_workflows.py::test_the_workflows_use_actions_at_all` | `release.yml` is renamed `release.yaml`, out of the guard's sight | green | red |
+| 122 | `tests/test_ci_workflows.py::test_every_action_is_pinned_to_a_commit_with_its_release_named` | one `setup-uv` step goes back to the movable tag `@v10.3.3` | green | red |
+| 123 | `tests/test_ci_workflows.py::test_every_action_is_pinned_to_a_commit_with_its_release_named` | one `setup-uv` step loses its `# v10.3.3` comment | green | red |
+| 124 | `tests/test_ci_workflows.py::test_one_action_runs_the_same_commit_everywhere` | `release.yml` checks out with v6.1.0's commit while `ci.yml` uses v7.0.1's | green | red |
 
 ## 📝 Notes on Specific Rows
 
@@ -230,8 +237,13 @@ per-character fold test went red, and the fix was to fold first.
 ## 🕳️ Not Covered by a Kill Row
 
 - **The two workflows themselves.** `release.yml` and the `identity` job in `ci.yml` only run on
-  GitHub. Rows 106 to 117 cover the tools they call; whether a tag push creates the release, and
-  whether the `AIDIDIT_PII_DENYLIST` secret reaches the job, is observed on the first real run.
+  GitHub. Rows 106 to 117 cover the tools they call. The secret was observed reaching the
+  `identity` job on 2026-11-10, when it checked 1 commit and printed no term. Whether a tag push
+  creates the release is observed on the first real tag.
+- **What a pinned commit runs.** Rows 121 to 124 check that each action is pinned to a commit and
+  named, not what that commit contains. The Node 24 runtime of both pins was read from each
+  action's `action.yml` at the pinned commit on 2026-11-10. A future bump needs the same check by
+  hand.
 - **End-to-end install** (`tests/e2e`) drives the real Spec Kit, and only its green control was
   observed. Its failure modes come from Spec Kit's behaviour, which this repo cannot mutate.
 - **The real detached spawn** (`test_bash_spawn_passes_the_prompt_as_one_untouched_argument`) runs
