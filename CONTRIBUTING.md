@@ -47,11 +47,12 @@ uv run ruff check src tests
 6. **Prompts are code.** Pack files reference each other only through runtime paths
    (`.specify/extensions/aididit/...`), command tokens (`__SPECKIT_COMMAND_AIDIDIT_DRAFT__`) and config
    keys defined in `aididit-config.template.yml`. The contract tests enforce all three.
-7. **No personal data.** No names, emails, home-directory paths, private tracker URLs or real
-   ticket keys. `tests/test_no_pii.py` scans the repo. To also scan for your own private terms,
-   point `AIDIDIT_PII_DENYLIST` at a file outside the repo with one term per line. The same list
-   checks commit authors and committers: `uv run python -m tools.check_commit_identity
-   --denylist <file>`.
+7. **No personal data.** No real names, personal emails, home-directory paths, private tracker
+   URLs or real ticket keys. GitHub handles are fine, and so are GitHub's noreply commit addresses:
+   both are already public on every contribution. `tests/test_no_pii.py` scans the repo. To also
+   scan for your own private terms, point `AIDIDIT_PII_DENYLIST` at a file outside the repo with
+   one term per line: real names and private terms, never handles. The same list checks commit
+   authors and committers: `uv run python -m tools.check_commit_identity --denylist <file>`.
 8. **Keep docs and code in one change.** A behaviour change updates the README, the affected pack
    files, the field guide in `docs/` and the CHANGELOG in the same commit.
 9. **Diagrams wear the house style.** Every Mermaid diagram is a `flowchart` that copies the init line
@@ -78,16 +79,18 @@ uv run ruff check src tests
 
 - **Commit identity.** Commit as the project, not as yourself:
   `git config user.name "Rubber Duck Engineering"` and
-  `git config user.email admin@rubberduckengineering.com` in your clone.
+  `git config user.email admin@rubberduckengineering.com` in your clone. A collaborator who
+  commits as themselves uses their GitHub handle and noreply address, never a real name.
 - **Commit in UTC.** A git date keeps your UTC offset, which narrows down where you live. Commit
   with `TZ=UTC` set (`TZ=UTC git commit ...` in Git Bash, or `$env:TZ = 'UTC'` first in
   PowerShell). `tools/check_commit_timezone.py` fails CI on a commit made as the project with any
   other offset; collaborators committing as themselves keep their own.
 - **The identity check in CI.** Store the private denylist as the `AIDIDIT_PII_DENYLIST` Actions
-  secret (one term per line). Without it the check is skipped with a warning. Both history checks
-  read the commits the event brings, from `tools/commit_range.py`: a pull request's base to its
-  head, or a push's commit before to its commit after. A commit already on `main` is judged once,
-  when it lands, so accepting one doesn't turn every later push red.
+  secret (one term per line: real names and private terms, not GitHub handles). Without it the check
+  is skipped with a warning. Both history checks read the commits the event brings, from
+  `tools/commit_range.py`: a pull request's base to its head, or a push's commit before to its
+  commit after. A commit already on `main` is judged once, when it lands, so accepting one doesn't
+  turn every later push red.
 - **Repository protection.** Pull request creation is set to collaborators only. The `protect
   main` ruleset blocks deleting or force-pushing `main` and requires a pull request with one
   approval (given after the latest push) from a code owner, resolved threads and every CI job

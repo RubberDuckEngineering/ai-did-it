@@ -20,6 +20,9 @@ All notable changes to this project are documented here. The format follows
   `tools/commit_range.py` now reads the range from the GitHub event: a pull request's base to its
   head, or a push's commit before to its commit after (everything reachable when the push creates
   the branch).
+- **GitHub handles are not personal data here.** CONTRIBUTING now says handles and GitHub's
+  noreply commit addresses are fine, since every contribution shows them, while real names never
+  are. The private denylist holds real names and private terms, not handles.
 - **CI actions run on Node 24 and are pinned to commits.** `actions/checkout` moves from v4 to
   v7.0.1 and `astral-sh/setup-uv` from v6 to v10.3.3, which clears GitHub's Node.js 20 deprecation
   warning. Each `uses:` names a full commit SHA with the release in a comment, so a moved tag
