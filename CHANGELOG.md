@@ -23,6 +23,9 @@ All notable changes to this project are documented here. The format follows
 - **GitHub handles are not personal data here.** CONTRIBUTING now says handles and GitHub's
   noreply commit addresses are fine, since every contribution shows them, while real names never
   are. The private denylist holds real names and private terms, not handles.
+- **Maintainers may merge with GitHub's button.** The merge commit carries the merging account's
+  profile name, which maintainers accept for their own merges; merging locally with
+  `git merge --ff-only` remains the way to keep a name out of history.
 - **CI actions run on Node 24 and are pinned to commits.** `actions/checkout` moves from v4 to
   v7.0.1 and `astral-sh/setup-uv` from v6 to v10.3.3, which clears GitHub's Node.js 20 deprecation
   warning. Each `uses:` names a full commit SHA with the release in a comment, so a moved tag
