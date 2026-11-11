@@ -41,7 +41,7 @@ ALL_USES = _uses()
 
 
 def test_the_workflows_use_actions_at_all():
-    assert {where.split(":")[0] for where, _, _ in ALL_USES} == {"ci.yml", "release.yml"}
+    assert {where.split(":")[0] for where, _, _ in ALL_USES} == {"ci.yml", "release.yml", "security.yml"}
 
 
 @pytest.mark.parametrize(("where", "ref", "rest"), ALL_USES, ids=[u[0] for u in ALL_USES])

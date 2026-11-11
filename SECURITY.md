@@ -20,3 +20,5 @@ on this repository (Security tab → "Report a vulnerability"). If that button i
 - Lane handoff notes are git-ignored and must never contain credentials. The pack's prompt-crafting
   discipline requires a secret scan before a note is written.
 - Work-item and PR text is treated as untrusted data by every stage.
+- CI scans every commit for secrets (gitleaks) and `uv.lock` for dependencies with a HIGH or
+  CRITICAL CVE (Trivy), on each change and weekly. Dependabot proposes dependency updates.

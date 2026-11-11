@@ -105,6 +105,16 @@ uv run ruff check src tests
   resolve the release tag to its commit (`gh api repos/<owner>/<action>/git/ref/tags/<tag>`,
   following an annotated tag to its commit), check that commit's `action.yml` runtime, and update
   every use of that action at once.
+- **Security scans.** `.github/workflows/security.yml` runs gitleaks over every commit and Trivy
+  over `uv.lock` on each pull request, each push to `main` and weekly. A finding fails the run.
+  `main` and the weekly run also publish results to the Security tab; a pull request does not,
+  because Dependabot's runs cannot write there. Its two jobs, `no secret anywhere in the history`
+  and `no dependency with a high or critical CVE`, belong in the `protect main` ruleset with the
+  others. Dependabot proposes Action and `uv` updates weekly, grouped into one pull request each.
+- **Bumping a scanner.** Dependabot does not see gitleaks or Trivy, because the workflow downloads
+  them. To bump one, change its `*_VERSION` and take `EXPECTED_SHA256` for the `linux_x64` /
+  `Linux-64bit` archive from that release's checksums file; `tests/test_security_workflow.py`
+  requires both, and the checksum is verified before the archive is unpacked.
 - **Merging.** GitHub's merge button is fine. It writes the merging account's profile name and
   local time zone into the merge commit it creates, which maintainers accept for their own
   merges. To keep your name out of history instead, merge locally with `git merge --ff-only` after
