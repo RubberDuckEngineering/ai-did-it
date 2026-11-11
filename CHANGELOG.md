@@ -13,6 +13,10 @@ All notable changes to this project are documented here. The format follows
   each push to `main` and weekly, and `main` and the weekly run publish results to the Security tab.
   Both scanners are pinned and checksum-verified before they run.
 - **Dependabot.** Weekly grouped updates for the GitHub Actions and the `uv` dependencies.
+- **Release zips carry build provenance.** The release workflow attests each zip before it
+  publishes the release, so `gh attestation verify aididit-vX.Y.Z.zip --repo
+  RubberDuckEngineering/ai-did-it` proves which workflow and commit built it. Its token now has no
+  default permissions; the job alone gets `contents`, `id-token` and `attestations` write.
 - **The README names the Spec Kit catalog listing.** `specify extension search aididit` finds the
   pack. The community catalog is for discovery only, so installing still uses `--from`.
 

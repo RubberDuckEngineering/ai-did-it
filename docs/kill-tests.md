@@ -244,6 +244,14 @@ flowchart LR
 | 161 | `tests/test_security_workflow.py::test_the_workflow_reads_only_except_where_it_uploads_results` | the workflow's default token can write contents | green | red |
 | 162 | `tests/test_security_workflow.py::test_the_workflow_reads_only_except_where_it_uploads_results` | the secrets job also gets `actions: write` | green | red |
 | 163 | `tests/test_security_workflow.py::test_dependabot_covers_every_package_manager_the_repository_uses` | Dependabot's `uv` entry is removed | green | red |
+| 164 | `tests/test_release_workflow.py::test_the_zip_is_attested_after_it_is_built_and_before_it_is_published` | the attestation step is removed | green | red |
+| 165 | `tests/test_release_workflow.py::test_the_zip_is_attested_after_it_is_built_and_before_it_is_published` | the attestation names every zip in `dist/` | green | red |
+| 166 | `tests/test_release_workflow.py::test_the_zip_is_attested_after_it_is_built_and_before_it_is_published` | the release is published before the zip is attested | green | red |
+| 167 | `tests/test_release_workflow.py::test_the_token_writes_only_what_the_release_needs` | the workflow's default token can write contents | green | red |
+| 168 | `tests/test_release_workflow.py::test_the_token_writes_only_what_the_release_needs` | the job loses `id-token: write`, so it cannot sign | green | red |
+| 169 | `tests/test_release_workflow.py::test_the_token_writes_only_what_the_release_needs` | the job loses `attestations: write`, so it cannot store the attestation | green | red |
+| 170 | `tests/test_release_workflow.py::test_the_token_writes_only_what_the_release_needs` | the job also gets `packages: write` | green | red |
+| 171 | `tests/test_ci_workflows.py::test_every_action_is_pinned_to_a_commit_with_its_release_named[release.yml:24]` | the attest action floats on its `v4` tag | green | red |
 
 ## 📝 Notes on Specific Rows
 
@@ -319,6 +327,12 @@ per-character fold test went red, and the fix was to fold first.
   lives in GitHub's settings, not in this repository.
 - **Dependabot.** Row 163 checks the config names both package managers, not that Dependabot opens
   pull requests; that is observed on its first weekly run.
+- **A real attestation.** Rows 164 to 171 read `release.yml`. The attestation is signed only when a
+  tag runs the workflow on GitHub, so it is observed on the next release, with
+  `gh attestation verify aididit-vX.Y.Z.zip --repo RubberDuckEngineering/ai-did-it`. Releases up to
+  v0.2.2 were published before this step and have no attestation. The pinned
+  `actions/attest-build-provenance` v4.2.2 is a composite action that runs `actions/attest` v4.2.1,
+  whose `action.yml` at its pinned commit was read as `node24` on 2026-11-11.
 
 - **The two workflows themselves.** `release.yml` and the `identity` job in `ci.yml` only run on
   GitHub. Rows 106 to 117 cover the tools they call. The secret was observed reaching the

@@ -22,3 +22,5 @@ on this repository (Security tab → "Report a vulnerability"). If that button i
 - Work-item and PR text is treated as untrusted data by every stage.
 - CI scans every commit for secrets (gitleaks) and `uv.lock` for dependencies with a HIGH or
   CRITICAL CVE (Trivy), on each change and weekly. Dependabot proposes dependency updates.
+- Each release zip carries a signed build-provenance attestation. Check a download with
+  `gh attestation verify <zip> --repo RubberDuckEngineering/ai-did-it`.

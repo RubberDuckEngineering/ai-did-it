@@ -176,7 +176,9 @@ Already living in Spec Kit and prefer its own tooling? AI Did It is listed in th
 `specify extension search aididit` finds it. That catalog is for discovery only, so install with
 `specify extension add aididit --from <zip URL>`, using the `aididit-vX.Y.Z.zip` asset of
 [the latest release](https://github.com/RubberDuckEngineering/ai-did-it/releases/latest),
-or clone this repo and run `specify extension add --dev src/aididit/pack`. Either way, the first
+or clone this repo and run `specify extension add --dev src/aididit/pack`. From the next release
+on, `gh attestation verify aididit-vX.Y.Z.zip --repo RubberDuckEngineering/ai-did-it` proves a
+downloaded zip was built by this repository's release workflow. Either way, the first
 stage that reads the markdown board creates `.specify/aididit/board.md` from the starter template
 if it is missing, and never overwrites one that is there.
 
