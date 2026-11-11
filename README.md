@@ -171,8 +171,11 @@ conflict over it.
 | `aididit doctor` | Check Python, Spec Kit, git (required) and gh, claude (optional) |
 | `aididit --version` | Print the version |
 
-Already living in Spec Kit and prefer its own tooling? Run `specify extension add aididit --from
-<zip URL>` with the `aididit-vX.Y.Z.zip` asset of [the latest release](https://github.com/RubberDuckEngineering/ai-did-it/releases/latest),
+Already living in Spec Kit and prefer its own tooling? AI Did It is listed in the
+[Spec Kit community catalog](https://github.github.com/spec-kit/community/extensions.html), so
+`specify extension search aididit` finds it. That catalog is for discovery only, so install with
+`specify extension add aididit --from <zip URL>`, using the `aididit-vX.Y.Z.zip` asset of
+[the latest release](https://github.com/RubberDuckEngineering/ai-did-it/releases/latest),
 or clone this repo and run `specify extension add --dev src/aididit/pack`. Either way, the first
 stage that reads the markdown board creates `.specify/aididit/board.md` from the starter template
 if it is missing, and never overwrites one that is there.

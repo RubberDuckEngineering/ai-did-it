@@ -6,6 +6,11 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **The README names the Spec Kit catalog listing.** `specify extension search aididit` finds the
+  pack. The community catalog is for discovery only, so installing still uses `--from`.
+
 ## [0.2.2] - 2026-11-10
 
 ### Fixed
