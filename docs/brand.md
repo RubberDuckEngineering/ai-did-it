@@ -88,12 +88,11 @@ is a test that has to pass on every change:
   ([Primer](sources.md#primer)): light `#FFFFFF`, dark `#0D1117`, dark dimmed `#212830`. Pure black
   stands in as a lower bound for the high-contrast dark themes.
 - **Diagrams fit the column.** GitHub draws a diagram in a frame as wide as the page column, 838 px
-  for the README on the repository's home page. A wider diagram is shrunk to fit, but the frame is
-  sized to the shrunk height while the drawing keeps its full height, so the bottom is cut off. On
-  2026-11-11 that cut 18 of 34 diagrams on a 1280 px screen. So diagrams run top to bottom, wrap
-  their labels, and split a fan of four or more onto two rows with `~~~` links. The init line also
-  trims Mermaid's padding from 48 px to 8 px a side. A phone's column is about 346 px, which almost
-  no diagram fits, so phones still crop; only GitHub can fix that.
+  for the README on the repository's home page, and shrinks a wider one to fit, text and all. On
+  2026-11-11 that drew 21 of 34 diagrams small on a 1280 px screen, the README's at 39% of its size.
+  So diagrams run top to bottom, wrap their labels, and split a fan of four or more onto two rows
+  with `~~~` links. The init line also trims Mermaid's padding from 48 px to 8 px a side. A phone's
+  column is about 346 px, which almost no diagram fits, so phones still shrink most diagrams.
 
 GitHub renders Mermaid in Markdown ([GitHub Docs](sources.md#github-diagrams)). The init line
 selects Mermaid's `base` theme, the one designed to be re-coloured through `themeVariables`

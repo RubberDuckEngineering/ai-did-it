@@ -360,9 +360,14 @@ per-character fold test went red, and the fix was to fold first.
 - **Diagrams as GitHub draws them.** Rows 172 to 178 measure each diagram with Mermaid 12.2.0
   and the settings read from GitHub's diagram viewer on 2026-11-11. On that date the test's widths
   matched github.com to the pixel for every diagram GitHub drew without shrinking. If GitHub
-  upgrades Mermaid, the pin goes stale and the test can pass while GitHub crops again. The 838 px
+  upgrades Mermaid, the pin goes stale and the test can pass while GitHub shrinks again. The 838 px
   column is GitHub's page layout, measured at windows 1280 px and wider; a
-  narrower window or a phone (about 346 px) still crops, and only GitHub can fix that.
+  narrower window or a phone (about 346 px) still shrinks most diagrams.
+  The branch was measured on github.com on 2026-11-11, headless in Edge, against `main`, by the
+  scale GitHub drew each diagram at and the drawing's bounds inside its frame. At 1280 px, `main`
+  shrank 21 of 35 frames (the smallest to 33%) and the branch none of 36. On a phone, `main` shrank
+  34 of 35 (median 35%, smallest 13%) and the branch 32 of 36 (median 59%, smallest 42%). No drawing
+  reached outside its frame on either.
 - **The two workflows themselves.** `release.yml` and the `identity` job in `ci.yml` only run on
   GitHub. Rows 106 to 117 cover the tools they call. The secret was observed reaching the
   `identity` job on 2026-11-10, when it checked 1 commit and printed no term. Whether a tag push

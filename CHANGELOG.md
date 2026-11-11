@@ -8,11 +8,12 @@ All notable changes to this project are documented here. The format follows
 
 ### Fixed
 
-- **Diagrams no longer lose their bottom on GitHub.** GitHub shrinks a diagram wider than the page
-  column but sizes its frame to the shrunk height, which cut off 18 of the 34 diagrams on a 1280 px
-  screen. Every diagram now fits the 838 px column: long chains run top to bottom, wide fans split
-  onto two rows, the Ideate flow in the stage guide is two diagrams, and the house init line trims
-  the padding to 8 px. Phones still crop, because their column is too narrow for almost any diagram.
+- **Diagrams draw at full size on GitHub.** GitHub shrinks a diagram wider than the page column to
+  fit, text and all. On a 1280 px screen 21 of the 34 diagrams were drawn small, the README's at 39%
+  and the smallest at 33%. Every diagram now fits the 838 px column, so none is shrunk: long chains
+  run top to bottom, wide fans split onto two rows, the Ideate flow in the stage guide is two
+  diagrams, and the house init line trims the padding to 8 px. Phones still shrink most diagrams,
+  but the smallest is now drawn at 42% instead of 13%, and the README's at 92% instead of 16%.
 
 ### Added
 

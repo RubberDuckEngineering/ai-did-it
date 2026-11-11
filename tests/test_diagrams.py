@@ -10,11 +10,11 @@ relative-luminance formula against each GitHub page background:
 - a node, line or group needs 3:1 against the page (SC 1.4.11, non-text contrast), from its fill or
   from its stroke, because a dark fill with a bright outline is visible on both themes.
 
-"Fits on GitHub" is measured too. GitHub draws each diagram in a frame as wide as the page column.
-A wider diagram is shrunk to fit, but the frame is sized to the shrunk height while the drawing keeps
-its full height, so the frame cuts the bottom off (18 of 34 diagrams at 1280 px on 2026-11-11). The
-width test renders every diagram with the Mermaid build and settings GitHub's viewer uses and checks
-its natural width against the column. It needs a browser, so it is skipped without one unless
+"Fits on GitHub" is measured too. GitHub draws each diagram in a frame as wide as the page column
+and shrinks a wider one to fit, text and all. On 2026-11-11 that drew 21 of 34 diagrams small on a
+1280 px screen, the README's at 39% of its size, too small to read. The width test renders every
+diagram with the Mermaid build and settings GitHub's viewer uses and checks its natural width
+against the column. It needs a browser, so it is skipped without one unless
 AIDIDIT_REQUIRE_DIAGRAMS=1, which CI sets on the one leg that runs it.
 """
 
@@ -242,7 +242,7 @@ def _natural_width(page, ident: str, body: str) -> float:
 def test_every_diagram_fits_the_github_column_without_shrinking(mermaid, ident, body):
     width = _natural_width(mermaid, ident, body)
 
-    assert width <= GITHUB_COLUMN, f"{ident} is {width:.0f} px wide; GitHub shrinks it and cuts it off"
+    assert width <= GITHUB_COLUMN, f"{ident} is {width:.0f} px wide; GitHub shrinks it, text and all"
 
 
 @pytest.mark.parametrize("stage", sorted(p.name for p in STAGES_DIR.iterdir() if p.is_dir()))
