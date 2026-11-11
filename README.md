@@ -21,11 +21,10 @@ job: clicking **merge**.
 > Investigate what actually happened. Tidy what you learned.
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}}}%%
-flowchart LR
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}, "flowchart": {"diagramPadding": 8}}}%%
+flowchart TB
     BOARD[/"your board<br/>Ready column"/]:::note --> A(["A · Assemble<br/><i>orchestrator</i>"]):::duck
     subgraph LANE["one lane per work item: six fresh sessions"]
-        direction LR
         I1(["I · Ideate"]):::link --> D1(["D · Draft"]):::link --> I2(["I · Iterate"]):::link --> D2(["D · Deliver"]):::link
         D2 --> M{{"you merge"}}:::human
         M --> I3(["I · Investigate"]):::link --> T(["T · Tidy"]):::link

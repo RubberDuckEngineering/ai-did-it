@@ -15,8 +15,8 @@ Every board provider maps onto the same five columns. Each move is made by a spe
 the board shows where every item is without anyone updating it by hand.
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}}}%%
-flowchart LR
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}, "flowchart": {"diagramPadding": 8}}}%%
+flowchart TB
     BL[/"Backlog"/]:::note -->|"Tidy triage<br/>promotes"| RD[/"Ready"/]:::note
     RD -->|"Assemble claims,<br/>race-safe"| IP[/"In Progress"/]:::note
     IP -->|"Iterate opens<br/>the PR"| IR[/"In Review"/]:::note
@@ -46,7 +46,7 @@ Every board write follows the same small protocol. It is boring by design: a boa
 reality is worse than no board, because people trust it.
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}}}%%
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}, "flowchart": {"diagramPadding": 8}}}%%
 flowchart TB
     W(["a stage wants to change an item"]):::link --> SEC{"Secret scan:<br/>credential shapes in the text?"}:::gate
     SEC -->|"yes"| RED(["redact each value,<br/>reference the source by context"]):::link
@@ -77,7 +77,7 @@ without an explanation.
 ## 🏃 Lane Runners: How the Next Link Starts
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}}}%%
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}, "flowchart": {"diagramPadding": 8}}}%%
 flowchart TB
     B(["boundary steps done: retro,<br/>clean tree, handoff.md on disk"]):::link --> P[/"compose next-link.prompt.md"/]:::note
     P --> SCAN(["sanitize: no secrets, no override phrases,<br/>no hidden characters, under 32,000 chars"]):::link --> SAN{"clean?"}:::gate
@@ -115,7 +115,7 @@ line with OWASP's guidance on handling untrusted input ([OWASP](sources.md#owasp
 `scripts/bash/spawn-lane.sh` and `scripts/powershell/spawn-lane.ps1` behave the same way:
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}}}%%
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}, "flowchart": {"diagramPadding": 8}}}%%
 flowchart TB
     ARGS(["--lane --link --prompt-file<br/>[--mode] [--dry-run]"]):::link --> CHECK(["validate: lowercase lane id, a real stage,<br/>prompt file non-empty and short enough"]):::link --> VAL{"valid?"}:::gate
     VAL -->|"no"| E2(["exit 2: nothing started"]):::stop
@@ -140,8 +140,8 @@ shims, because `cmd.exe` would re-parse the prompt as shell syntax.
 ## 🗃️ What Lives Where
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}}}%%
-flowchart LR
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}, "flowchart": {"diagramPadding": 8}}}%%
+flowchart TB
     subgraph EXT[".specify/extensions/aididit/ (replaced on upgrade)"]
         direction TB
         X1[/"extension.yml, stages,<br/>personas, shared docs"/]:::note

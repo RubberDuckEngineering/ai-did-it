@@ -28,6 +28,12 @@ jobs:
       - run: uv run ruff check src tests tools
       - run: uv run ruff format --check src tests tools
       - run: uv run pytest --cov=aididit --cov=tools
+      # Windows ships Edge and the fonts GitHub's diagrams ask for, so widths match what readers see.
+      - name: measure every diagram against GitHub's column
+        if: matrix.os == 'windows-latest' && matrix.python == '3.13'
+        env:
+          AIDIDIT_REQUIRE_DIAGRAMS: "1"
+        run: uv run --group diagrams pytest tests/test_diagrams.py -m diagrams
 
   identity:
     name: commit identity and dates leak nothing

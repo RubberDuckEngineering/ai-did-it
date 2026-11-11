@@ -23,11 +23,10 @@ This file is the reference for each stage's contract, the transition contract, t
 | **T** | Tidy | `/speckit.aididit.tidy` | 6 | Reflection-action | work item to Done, delivery comment, board triage, rule graduations, artifact sweep | **Beck** (*Tidy First?*) and **Martin** (the Boy Scout Rule) |
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}}}%%
-flowchart LR
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}, "flowchart": {"diagramPadding": 8}}}%%
+flowchart TB
     A(["<b>A</b> Assemble<br/><i>orchestrator, not a link</i>"]):::duck
     subgraph LANE["one lane: I-DID-IT, six links, six fresh sessions"]
-        direction LR
         L1(["<b>1 · I</b><br/>Ideate<br/><i>Mode B</i>"]):::link --> L2(["<b>2 · D</b><br/>Draft"]):::link --> L3(["<b>3 · I</b><br/>Iterate"]):::link --> L4(["<b>4 · D</b><br/>Deliver"]):::link
         L4 --> HG{{"HUMAN<br/>merges"}}:::human
         HG --> L5(["<b>5 · I</b><br/>Investigate"]):::link --> L6(["<b>6 · T</b><br/>Tidy"]):::link
@@ -151,8 +150,8 @@ Most stage work happens inside loops: clarify and analyze in Draft, red-green-re
 Every link ends the same way:
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}}}%%
-flowchart LR
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}, "flowchart": {"diagramPadding": 8}}}%%
+flowchart TB
     S(["Stage N finishing:<br/>retro (except Tidy)"]):::link --> C(["commit tracked<br/>retro output"]):::link
     C --> G{"git status --short<br/>is empty?"}:::gate
     G -->|"no"| X(["hard stop"]):::stop

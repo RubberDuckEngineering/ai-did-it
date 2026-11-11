@@ -20,7 +20,7 @@ The intuition is that an agent works well until its context is full, then stops.
 2. **Most of what accumulates is spent fuel.** Tool output, API responses, superseded plans, review transcripts. All of it was needed once; little of it is needed now, and all of it competes with what is.
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}}}%%
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}, "flowchart": {"diagramPadding": 8}}}%%
 flowchart LR
     subgraph MYTH["The intuition: context as a container"]
         direction TB
@@ -92,7 +92,7 @@ Mode B runs four checks, each aimed at a recurring failure:
 **Each link ends by starting the next as a fresh session.** An agent should not run two links in one continuous session, however much room seems to be left.
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}}}%%
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}, "flowchart": {"diagramPadding": 8}}}%%
 flowchart LR
     subgraph WRONG["Collapsed: one session, whole arc"]
         direction TB
@@ -118,8 +118,8 @@ How the next link starts depends on the runner you configure ([`lane-runner.md`]
 ## 🔗 A Lane, Link by Link
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}}}%%
-flowchart LR
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}, "flowchart": {"diagramPadding": 8}}}%%
+flowchart TB
     B[/"board item, reserved numbers,<br/>lane contract"/]:::note --> L1(["1 Ideate<br/>premises, scope,<br/>overlap, falsifiable ACs"]):::link
     L1 -->|"handoff,<br/>never halts"| L2(["2 Draft<br/>specify, clarify, plan,<br/>tasks, analyze"]):::link
     L2 -->|"handoff"| L3(["3 Iterate<br/>red, green, refactor,<br/>commit, PR, analyze"]):::link
@@ -211,10 +211,10 @@ Assemble reads the board's `Ready` column, groups items that touch overlapping f
 ## ☕ The Human's Day
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}}}%%
-flowchart LR
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}, "flowchart": {"diagramPadding": 8}}}%%
+flowchart TB
     subgraph AM["Morning: you"]
-        direction TB
+        direction LR
         H1{{"say Agents Assemble"}}:::human --> H2(["watch the lanes start"]):::duck
     end
     subgraph DAY["The lanes run: the agents"]
@@ -222,7 +222,7 @@ flowchart LR
         A1(["Ideate interrogates each item"]):::link --> A2(["Draft argues with itself"]):::link --> A3(["Iterate writes tests, then code"]):::link --> A4(["Deliver takes the panel and the bots"]):::link
     end
     subgraph GATE["The gate: you"]
-        direction TB
+        direction LR
         H3(["read the green PRs"]):::duck --> H4{{"merge"}}:::human
     end
     subgraph PM["After: the agents, then you"]

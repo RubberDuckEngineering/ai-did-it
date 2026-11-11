@@ -6,6 +6,22 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Fixed
+
+- **Diagrams draw at full size on GitHub.** GitHub shrinks a diagram wider than the page column to
+  fit, text and all. On a 1280 px screen 21 of the 34 diagrams were drawn small, the README's at 39%
+  and the smallest at 33%. Every diagram now fits the 838 px column, so none is shrunk: long chains
+  run top to bottom, wide fans split onto two rows, the Ideate flow in the stage guide is two
+  diagrams, and the house init line trims the padding to 8 px. Phones still shrink most diagrams,
+  but the smallest is now drawn at 42% instead of 13%, and the README's at 92% instead of 16%.
+
+### Added
+
+- **A width check for diagrams.** `tests/test_diagrams.py` draws every diagram in Edge with the
+  Mermaid build and settings GitHub's viewer uses (12.2.0) and fails one wider than the column. It
+  needs the new `diagrams` dependency group; CI runs it on the Windows, Python 3.13 leg and refuses
+  to skip it there.
+
 ## [0.2.3] - 2026-11-11
 
 ### Added

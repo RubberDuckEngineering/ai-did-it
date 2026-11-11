@@ -10,11 +10,10 @@ agent-facing contract is [`shared/lifecycle.md`](../src/aididit/pack/shared/life
 ## 🏁 The Big Picture
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}}}%%
-flowchart LR
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}, "flowchart": {"diagramPadding": 8}}}%%
+flowchart TB
     BOARD[/"board<br/>Ready column"/]:::note --> A(["A · Assemble<br/>the orchestrator"]):::duck
     subgraph LANE["one lane per work item: six links, six fresh sessions"]
-        direction LR
         I1(["1 · I<br/>Ideate"]):::link --> D1(["2 · D<br/>Draft"]):::link --> I2(["3 · I<br/>Iterate"]):::link --> D2(["4 · D<br/>Deliver"]):::link
         D2 --> M{{"you<br/>merge"}}:::human
         M --> I3(["5 · I<br/>Investigate"]):::link --> T(["6 · T<br/>Tidy"]):::link
@@ -42,7 +41,7 @@ Every link ends the same way. The handoff note is on disk **before** the next li
 killed session never takes the lane's state with it.
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}}}%%
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}, "flowchart": {"diagramPadding": 8}}}%%
 flowchart TB
     S(["Stage N finishes its work"]):::link --> R(["retro<br/>(every stage except Tidy)"]):::link
     R --> C(["commit the tracked retro output"]):::link
@@ -77,7 +76,7 @@ post-implementation analyze in Iterate, panel and bot rounds in Deliver. Every o
 under the same budget.
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}}}%%
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}, "flowchart": {"diagramPadding": 8}}}%%
 flowchart TB
     START(["round 1"]):::link --> F{"Any CRITICAL or<br/>HIGH finding left?"}:::gate
     F -->|"no"| EXIT(["exit early"]):::ok
@@ -85,10 +84,12 @@ flowchart TB
     CAP -->|"no"| FIX(["fix, then next round"]):::link --> F
     CAP -->|"yes"| MECH(["fix the mechanical<br/>leftovers directly"]):::link
     MECH --> PANEL[["panel rules once on<br/>each judgement left"]]:::panel
-    PANEL -->|"leaving it makes the<br/>build wrong or untestable"| NOW(["fix now"]):::link
-    PANEL -->|"acceptable"| NOTE[/"accept, with a note<br/>in the artifact"/]:::note
-    PANEL -->|"worth doing later"| ITEM[/"file a follow-up<br/>work item"/]:::note
-    PANEL -->|"cannot settle a<br/>CRITICAL or HIGH"| HUMAN{{"lane stops,<br/>a human decides"}}:::human
+    PANEL --> NOW(["leaving it makes<br/>the build wrong<br/>or untestable:<br/>fix now"]):::link
+    PANEL --> NOTE[/"acceptable:<br/>accept, with a<br/>note in the artifact"/]:::note
+    PANEL --> ITEM[/"worth doing later:<br/>file a follow-up<br/>work item"/]:::note
+    PANEL --> HUMAN{{"cannot settle a<br/>CRITICAL or HIGH:<br/>the lane stops,<br/>a human decides"}}:::human
+    NOW ~~~ ITEM
+    NOTE ~~~ HUMAN
     classDef link fill:#0F6B5C,color:#FFFFFF,stroke:#FFD23F,stroke-width:2px
     classDef gate fill:#F5A142,color:#1B2A41,stroke:#1B2A41,stroke-width:2px
     classDef human fill:#C2185B,color:#FFFFFF,stroke:#FFD23F,stroke-width:3px
@@ -106,15 +107,16 @@ bar, never whether to.
 ## 🧑‍⚖️ Who Decides What
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}}}%%
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}, "flowchart": {"diagramPadding": 8}}}%%
 flowchart TB
     Q(["a decision comes up"]):::link --> AUTO{"An automated gate:<br/>test, linter, scanner?"}:::gate
     AUTO -->|"yes, and it is red"| HALT(["halt and fix:<br/>nobody can bypass it"]):::stop
     AUTO -->|"no"| IRR{"irreversible or<br/>outward-facing?"}:::gate
     IRR -->|"yes: publish, delete,<br/>spend, grant access"| HUM{{"a human decides"}}:::human
     IRR -->|"no"| MERGE{"Is it the merge?"}:::gate
-    MERGE -->|"yes, delivery.merge: human"| HUM
-    MERGE -->|"yes, delivery.merge: auto"| DEL(["Deliver merges, only<br/>when everything is green"]):::ok
+    MERGE -->|"yes"| CFG{"delivery.merge?"}:::gate
+    CFG -->|"human"| HUM
+    CFG -->|"auto"| DEL(["Deliver merges, only<br/>when everything is green"]):::ok
     MERGE -->|"no"| PANEL[["the practitioner panel,<br/>fresh and cited"]]:::panel
     PANEL -->|"grounded: at least two<br/>citing members"| RULE(["ruling recorded<br/>in decisions.md"]):::ok
     PANEL -->|"cannot ground after<br/>5 changed attempts"| HUM
@@ -135,7 +137,7 @@ judgement. Teams that have earned the trust can set `delivery.merge: auto`.
 ## 🧩 When Not Every Stage Applies
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}}}%%
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}, "flowchart": {"diagramPadding": 8}}}%%
 flowchart LR
     W{"What are you shipping?"}:::gate
     W -->|"a whole board"| B(["Assemble, then one<br/>six-link lane per item"]):::duck

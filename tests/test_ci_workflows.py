@@ -11,6 +11,9 @@ Acceptance criteria
   same commit, so no job is left behind on an old release.
 - Given the identity job, when it is read, then it asks `tools.commit_range` for the commits the
   event brought before it runs either check, so a push is judged on what it pushed, not all history.
+- Given the test job, when it is read, then exactly one leg of its matrix measures every diagram in
+  a browser, with the measurement required, so a missing browser fails the build instead of
+  skipping the width check.
 """
 
 from __future__ import annotations
@@ -70,3 +73,17 @@ def test_the_identity_job_checks_only_the_commits_the_event_brought():
     assert len(reads_range) == 1, "no step asks tools.commit_range for the range"
     assert len(checks) == 2, "both checks read the range"
     assert all(reads_range[0] < check for check in checks), "the range is read after a check ran"
+
+
+def test_one_test_leg_measures_every_diagram_and_cannot_skip():
+    ci = yaml.safe_load((WORKFLOWS / "ci.yml").read_text(encoding="utf-8"))
+    test = ci["jobs"]["test"]
+    measuring = [step for step in test["steps"] if "-m diagrams" in step.get("run", "")]
+
+    assert len(measuring) == 1, "no step, or more than one, measures the diagrams"
+    step = measuring[0]
+    assert "--group diagrams" in step["run"], "the step runs without Playwright installed"
+    assert step.get("env", {}).get("AIDIDIT_REQUIRE_DIAGRAMS") == "1", "a missing browser would skip"
+    assert step["if"] == "matrix.os == 'windows-latest' && matrix.python == '3.13'"
+    assert "windows-latest" in test["strategy"]["matrix"]["os"], "the measuring leg left the matrix"
+    assert "3.13" in test["strategy"]["matrix"]["python"], "the measuring leg left the matrix"
