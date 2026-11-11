@@ -6,6 +6,8 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.2.3] - 2026-11-11
+
 ### Added
 
 - **Security scans.** A new `security` workflow runs gitleaks over every commit for secrets and
@@ -19,6 +21,11 @@ All notable changes to this project are documented here. The format follows
   default permissions; the job alone gets `contents`, `id-token` and `attestations` write.
 - **The README names the Spec Kit catalog listing.** `specify extension search aididit` finds the
   pack. The community catalog is for discovery only, so installing still uses `--from`.
+
+### Changed
+
+- **The lockfile resolves Spec Kit 1.3.2.** CI and a source checkout now run `specify-cli` 1.3.2
+  (was 1.3.0); the supported range, `>=1.3.0,<2`, is unchanged.
 
 ## [0.2.2] - 2026-11-10
 
