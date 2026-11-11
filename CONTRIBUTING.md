@@ -57,7 +57,9 @@ uv run ruff check src tests
    files, the field guide in `docs/` and the CHANGELOG in the same commit.
 9. **Diagrams wear the house style.** Every Mermaid diagram is a `flowchart` that copies the init line
    and `classDef` lines from [the brand book](docs/brand.md). `tests/test_diagrams.py` checks this and
-   re-measures the palette's contrast against GitHub's light and dark themes.
+   re-measures the palette's contrast against GitHub's light and dark themes. Its width check draws
+   each diagram in Edge and fails one wider than GitHub's column; run it with
+   `uv run --group diagrams pytest tests/test_diagrams.py -m diagrams`. CI runs it on Windows.
 10. **Cite or label.** A claim that leans on published work links to an entry in
     [`docs/sources.md`](docs/sources.md) (the anchor must exist; a test checks). A claim that goes
     beyond its source is labelled `[Inference]`; an unchecked one `[Unverified]`. Add a new source with

@@ -34,7 +34,7 @@ adds coordination cost, a point [Brooks](sources.md#brooks-1975) made about peop
 it applied to agents.
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}}}%%
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}, "flowchart": {"diagramPadding": 8}}}%%
 flowchart TB
     B[/"board: Ready column"/]:::note --> PRE(["preflight: board readable, tree clean,<br/>runner works, no secrets in items"]):::duck
     PRE --> PF{"all green?"}:::gate
@@ -91,37 +91,42 @@ Stories are checked against INVEST ([Wake](sources.md#wake-2003)). Asking why re
 applied to acceptance criteria: a criterion that cannot fail cannot pass.
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}}}%%
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}, "flowchart": {"diagramPadding": 8}}}%%
 flowchart TB
     IN(["Ideate is called"]):::link --> WHO{"Who called?"}:::gate
-    WHO -->|"a human with a notion"| A1(["Mode A: one question<br/>at a time, cite or don't suggest"]):::link
+    WHO -->|"a human with a notion"| A1(["Mode A: one question<br/>at a time, cite or<br/>don't suggest"]):::link
+    WHO -->|"a lane kickoff,<br/>or mode:B item:ref"| B0(["Mode B: four<br/>checks, never<br/>asks the human"]):::link
     A1 --> A2{"Shaped within<br/>two rounds?"}:::gate
     A2 -->|"yes"| A3[/"new item in Backlog"/]:::note
     A2 -->|"no"| A4[/"a spike, honestly labelled"/]:::note
     A3 --> AB{{"the board decides<br/>what runs next"}}:::human
     A4 --> AB
-    WHO -->|"a lane kickoff,<br/>or mode:B item:ref"| B0(["Mode B: four checks,<br/>never asks the human"]):::link
-    B0 --> C1(["B1 premises vs code"]):::link
-    B0 --> C2(["B2 bundled scope"]):::link
-    B0 --> C3(["B3 linked-item overlap"]):::link
-    B0 --> C4(["B4 falsifiable criteria"]):::link
-    C1 --> F{"Any finding?"}:::gate
-    C2 --> F
-    C3 --> F
-    C4 --> F
-    F -->|"no"| GO(["annotate, retro,<br/>hand off to Draft"]):::ok
-    F -->|"yes"| P[["panel rules"]]:::panel
-    P -->|"bundled"| SPLIT(["create spin-off items first,<br/>narrow this one"]):::link --> GO
-    P -->|"false premise"| FIX(["rewrite the affected<br/>acceptance criteria"]):::link --> GO
-    P -->|"declined"| DEC(["comment, then close as declined;<br/>lane ends, a decided outcome"]):::stop
-    P -->|"already done"| DONE(["close as delivered,<br/>with the null-result evidence"]):::ok
     classDef link fill:#0F6B5C,color:#FFFFFF,stroke:#FFD23F,stroke-width:2px
     classDef gate fill:#F5A142,color:#1B2A41,stroke:#1B2A41,stroke-width:2px
     classDef human fill:#C2185B,color:#FFFFFF,stroke:#FFD23F,stroke-width:3px
+    classDef note fill:#FFF4D6,color:#1B2A41,stroke:#1B2A41,stroke-width:1px
+```
+
+Mode B runs its four checks in order, and the panel rules on anything they find:
+
+```mermaid
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}, "flowchart": {"diagramPadding": 8}}}%%
+flowchart TB
+    B0(["Mode B: four<br/>checks, never<br/>asks the human"]):::link --> CHECKS(["B1 premises<br/>vs code<br/>B2 bundled scope<br/>B3 linked-item<br/>overlap<br/>B4 falsifiable<br/>criteria"]):::link
+    CHECKS --> F{"Any finding?"}:::gate
+    F -->|"no"| GO(["annotate, retro,<br/>hand off to Draft"]):::ok
+    F -->|"yes"| P[["panel rules"]]:::panel
+    P -->|"bundled"| SPLIT(["create spin-off<br/>items first,<br/>narrow this one"]):::link --> GO
+    P -->|"false premise"| FIX(["rewrite the affected<br/>acceptance criteria"]):::link --> GO
+    P -->|"declined"| DEC(["comment, then<br/>close as declined;<br/>the lane ends,<br/>a decided outcome"]):::stop
+    P -->|"already done"| DONE(["close as<br/>delivered, with<br/>the null-result<br/>evidence"]):::ok
+    SPLIT ~~~ DEC
+    FIX ~~~ DONE
+    classDef link fill:#0F6B5C,color:#FFFFFF,stroke:#FFD23F,stroke-width:2px
+    classDef gate fill:#F5A142,color:#1B2A41,stroke:#1B2A41,stroke-width:2px
     classDef panel fill:#5B3F8C,color:#FFFFFF,stroke:#FFD23F,stroke-width:2px
     classDef stop fill:#B3261E,color:#FFFFFF,stroke:#FFD23F,stroke-width:2px
     classDef ok fill:#1E7B34,color:#FFFFFF,stroke:#FFD23F,stroke-width:2px
-    classDef note fill:#FFF4D6,color:#1B2A41,stroke:#1B2A41,stroke-width:1px
 ```
 
 **Mode B never halts the lane.** Every finding goes to [the panel](panel.md). The lane continues,
@@ -149,7 +154,7 @@ puts the business, development and testing views on the same story before any co
 is the Three Amigos practice ([Agile Alliance](sources.md#three-amigos)) with two more chairs added.
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}}}%%
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}, "flowchart": {"diagramPadding": 8}}}%%
 flowchart TB
     BASE(["git baseline: clean tree,<br/>on the latest default branch"]):::link --> G0{"baseline ok?"}:::gate
     G0 -->|"no"| X(["hard halt"]):::stop
@@ -195,7 +200,7 @@ The "every guard must be able to fail" rule is mutation testing's founding idea:
 judged by the faults it detects ([DeMillo, Lipton & Sayward](sources.md#demillo-1978)).
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}}}%%
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}, "flowchart": {"diagramPadding": 8}}}%%
 flowchart TB
     T[/"next task in tasks.md"/]:::note --> RED(["write a failing test"]):::stop
     RED --> WATCH{"Did it fail,<br/>for the right reason?"}:::gate
@@ -237,7 +242,7 @@ default the merge is yours.
 so a reader can tell blocking from non-blocking at a glance.
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}}}%%
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}, "flowchart": {"diagramPadding": 8}}}%%
 flowchart TB
     PR[/"open PR from Iterate"/]:::note --> PAN[["panel review: one lens per<br/>surface the diff touches"]]:::panel
     PAN --> FAM(["fix by family:<br/>one commit per root cause"]):::link
@@ -293,7 +298,7 @@ GitHub's `merge_commit_sha` is no proof: it is set on an open PR too, for the te
 builds ([GitHub](sources.md#github-pulls-api)).
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}}}%%
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}, "flowchart": {"diagramPadding": 8}}}%%
 flowchart TB
     M{"merge check:<br/>host reports MERGED?"}:::gate -->|"yes"| SUB(["establish the subject:<br/>merge SHA, item, ACs"]):::link
     M -->|"no"| NM(["stop: nothing<br/>to investigate yet"]):::stop
@@ -301,10 +306,12 @@ flowchart TB
     CEN --> AC(["verify each criterion<br/>against the running system"]):::link
     AC --> COL(["sweep for collateral damage:<br/>health, errors, jobs, cost, neighbours"]):::link
     COL --> V{"Verdict"}:::gate
-    V -->|"every AC verified,<br/>nothing nearby moved"| CLEAR(["CLEAR"]):::ok
-    V -->|"ACs hold, but something moved<br/>or a row is unverifiable"| DEG(["DEGRADED:<br/>findings filed as new items"]):::gate
-    V -->|"environment<br/>unreachable"| UNV{{"UNVERIFIABLE:<br/>a human decides"}}:::human
-    V -->|"an AC does not hold"| REG(["REGRESSED:<br/>file it, stop, no Tidy"]):::stop
+    V --> CLEAR(["CLEAR: every<br/>AC verified,<br/>nothing nearby moved"]):::ok
+    V --> DEG(["DEGRADED: ACs hold,<br/>but something moved<br/>or a row is unverifiable;<br/>findings filed<br/>as new items"]):::gate
+    V --> UNV{{"UNVERIFIABLE:<br/>environment<br/>unreachable,<br/>a human decides"}}:::human
+    V --> REG(["REGRESSED:<br/>an AC does not hold;<br/>file it, stop, no Tidy"]):::stop
+    CLEAR ~~~ UNV
+    DEG ~~~ REG
     CLEAR --> QA[/"QA record on the work item"/]:::note
     DEG --> QA
     QA --> TIDY(["retro into the QA record,<br/>hand off to Tidy"]):::link
@@ -345,7 +352,7 @@ tidyings ([Beck](sources.md#beck-2023)) and the Boy Scout Rule of leaving the co
 found it ([Martin](sources.md#martin-2008)).
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}}}%%
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}, "flowchart": {"diagramPadding": 8}}}%%
 flowchart TB
     IN(["verdict CLEAR or DEGRADED"]):::link --> R1(["close what this<br/>delivery fixed"]):::link
     R1 --> R2[/"retros from Ideate,<br/>Draft, Iterate, Deliver"/]:::note

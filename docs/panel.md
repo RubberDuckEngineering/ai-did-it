@@ -28,7 +28,7 @@ reviewed or endorsed AI Did It.
 ## 🗳️ How a Ruling Gets Made
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}}}%%
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}, "flowchart": {"diagramPadding": 8}}}%%
 flowchart TB
     Q(["a judgement call:<br/>2 or 3 concrete options"]):::link --> SUM[["summon FRESH members,<br/>one per practitioner, in parallel"]]:::panel
     SUM --> POS(["each returns a verdict,<br/>3 to 6 sentences, citations"]):::persona
@@ -37,6 +37,8 @@ flowchart TB
     VER -->|"words not theirs"| ATT(["attribution failure:<br/>discard the vote"]):::stop
     VER -->|"no citation"| INF(["labelled Inference:<br/>recorded, does not vote"]):::note
     VER -->|"verified"| VOTE(["counted vote"]):::ok
+    FAB ~~~ INF
+    ATT ~~~ VOTE
     VOTE --> GR{"At least two<br/>verified votes?"}:::gate
     FAB --> GR
     ATT --> GR
@@ -44,8 +46,8 @@ flowchart TB
     GR -->|"no"| RETRY(["grounding retry loop"]):::gate
     GR -->|"yes"| MAJ{"Strict majority?"}:::gate
     MAJ -->|"yes"| WIN(["the majority's option"]):::ok
-    MAJ -->|"tie"| TIE(["most directly grounded side wins;<br/>dissent recorded word for word"]):::ok
-    MAJ -->|"split, weakly grounded"| REV(["the most reversible option"]):::ok
+    MAJ -->|"tie"| TIE(["most directly grounded<br/>side wins; dissent<br/>recorded word for word"]):::ok
+    MAJ -->|"split, weakly<br/>grounded"| REV(["the most<br/>reversible option"]):::ok
     WIN --> LOG[/"decisions.md and the<br/>artifact it changes"/]:::note
     TIE --> LOG
     REV --> LOG
@@ -85,7 +87,7 @@ pack's `practitioner-panel.md`.
 ## 🔁 When Nobody Can Cite: the Grounding Retry Loop
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}}}%%
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}, "flowchart": {"diagramPadding": 8}}}%%
 flowchart TB
     A1(["attempt 1"]):::link --> G{"Grounded?"}:::gate
     G -->|"yes"| RULE(["apply the decision rule"]):::ok
@@ -114,7 +116,7 @@ anything. The rules live once, in the pack's `panel-guide.md` Part 0, and every 
 one it obeys.
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}}}%%
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}, "flowchart": {"diagramPadding": 8}}}%%
 flowchart TB
     Q(["a question reaches<br/>a decision point"]):::duck --> FACT{"Can it be measured?"}:::gate
     FACT -->|"yes"| MEASURE(["measure it:<br/>facts are not voted on"]):::ok
@@ -127,6 +129,7 @@ flowchart TB
     VET -->|"no"| GROOM{"Grooming that already<br/>fits the WIP limit?"}:::gate
     GROOM -->|"yes: P5"| ORDER(["promote in order"]):::ok
     GROOM -->|"no"| ROUND[["cited decision round:<br/>one per triage (P4)"]]:::panel
+    MEASURE ~~~ FIX ~~~ PROCEED ~~~ ONE ~~~ ORDER
     classDef duck fill:#FFD23F,color:#1B2A41,stroke:#1B2A41,stroke-width:2px
     classDef gate fill:#F5A142,color:#1B2A41,stroke:#1B2A41,stroke-width:2px
     classDef panel fill:#5B3F8C,color:#FFFFFF,stroke:#FFD23F,stroke-width:2px

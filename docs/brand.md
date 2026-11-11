@@ -25,13 +25,13 @@ Every colour means one thing, and every diagram uses the same meanings. Shapes c
 a reader with a colour-vision deficiency can still tell a decision from a stage.
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}}}%%
-flowchart LR
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}, "flowchart": {"diagramPadding": 8}}}%%
+flowchart TB
     D(["duck<br/>Assemble"]):::duck --> L(["link<br/>a lane stage"]):::link
     L -->|"asks"| R(["persona<br/>a teammate"]):::persona
     L -->|"asks"| P[["panel<br/>the practitioners"]]:::panel
     L -.->|"writes"| N[/"note<br/>handoff.md"/]:::note
-    L --> G{"gate<br/>checks green?"}:::gate
+    N --> G{"gate<br/>checks green?"}:::gate
     G -->|"yes"| H{{"human<br/>you merge"}}:::human --> O(["ok<br/>shipped"]):::ok
     G -->|"no"| S(["stop<br/>tell a human"]):::stop
     classDef duck fill:#FFD23F,color:#1B2A41,stroke:#1B2A41,stroke-width:2px
@@ -87,6 +87,13 @@ is a test that has to pass on every change:
 - **The pages are GitHub's own.** The backgrounds come from GitHub's Primer design tokens
   ([Primer](sources.md#primer)): light `#FFFFFF`, dark `#0D1117`, dark dimmed `#212830`. Pure black
   stands in as a lower bound for the high-contrast dark themes.
+- **Diagrams fit the column.** GitHub draws a diagram in a frame as wide as the page column, 838 px
+  for the README on the repository's home page. A wider diagram is shrunk to fit, but the frame is
+  sized to the shrunk height while the drawing keeps its full height, so the bottom is cut off. On
+  2026-11-11 that cut 18 of 34 diagrams on a 1280 px screen. So diagrams run top to bottom, wrap
+  their labels, and split a fan of four or more onto two rows with `~~~` links. The init line also
+  trims Mermaid's padding from 48 px to 8 px a side. A phone's column is about 346 px, which almost
+  no diagram fits, so phones still crop; only GitHub can fix that.
 
 GitHub renders Mermaid in Markdown ([GitHub Docs](sources.md#github-diagrams)). The init line
 selects Mermaid's `base` theme, the one designed to be re-coloured through `themeVariables`
@@ -99,10 +106,11 @@ Every diagram starts with the init line from the palette diagram above, copied e
 declares only the `classDef` lines it uses, also copied exactly. In practice:
 
 1. Copy the palette diagram's first line as your diagram's first line.
-2. Write `flowchart LR` or `flowchart TB` on the second line.
+2. Write `flowchart TB` on the second line. Use `flowchart LR` only for a short chain.
 3. Tag nodes with `:::duck`, `:::link`, `:::gate` and so on.
 4. Paste the matching `classDef` lines from the palette diagram at the bottom.
-5. Run `uv run pytest tests/test_diagrams.py`.
+5. Run `uv run pytest tests/test_diagrams.py`, then measure the width with
+   `uv run --group diagrams pytest tests/test_diagrams.py -m diagrams` (needs Microsoft Edge).
 
 The test rejects a diagram that:
 
@@ -110,7 +118,8 @@ The test rejects a diagram that:
 - invents or recolours a class;
 - uses a class it never defines;
 - paints with `style` or `linkStyle`;
-- is not a flowchart.
+- is not a flowchart;
+- is wider than 838 px when drawn with the Mermaid build and settings GitHub uses (12.2.0).
 
 It also re-measures the palette itself, so recolouring a class here fails the build if the new
 colour cannot pass the contrast bars. Every stage also has to have a flow in

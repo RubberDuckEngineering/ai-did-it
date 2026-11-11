@@ -9,11 +9,19 @@ relative-luminance formula against each GitHub page background:
 - text on its own fill needs 4.5:1 (SC 1.4.3, contrast minimum);
 - a node, line or group needs 3:1 against the page (SC 1.4.11, non-text contrast), from its fill or
   from its stroke, because a dark fill with a bright outline is visible on both themes.
+
+"Fits on GitHub" is measured too. GitHub draws each diagram in a frame as wide as the page column.
+A wider diagram is shrunk to fit, but the frame is sized to the shrunk height while the drawing keeps
+its full height, so the frame cuts the bottom off (18 of 34 diagrams at 1280 px on 2026-11-11). The
+width test renders every diagram with the Mermaid build and settings GitHub's viewer uses and checks
+its natural width against the column. It needs a browser, so it is skipped without one unless
+AIDIDIT_REQUIRE_DIAGRAMS=1, which CI sets on the one leg that runs it.
 """
 
 from __future__ import annotations
 
 import json
+import os
 import re
 from pathlib import Path
 
@@ -35,6 +43,20 @@ PAGES = {
 }
 TEXT_MIN = 4.5
 GRAPHIC_MIN = 3.0
+
+# GitHub's diagram viewer (viewscreen.githubusercontent.com, read 2026-11-11) bundles Mermaid 12.2.0
+# and calls mermaid.initialize with these settings. The integrity hash pins the exact file.
+MERMAID_JS = "https://cdn.jsdelivr.net/npm/mermaid@12.2.0/dist/mermaid.min.js"
+MERMAID_SRI = "sha256-qKam+AWwdKgmGiglyG+ZyAVKyzs19Qu34kpPnyw8O58="
+GITHUB_MERMAID_CONFIG = {
+    "startOnLoad": False,
+    "securityLevel": "antiscript",
+    "flowchart": {"diagramPadding": 48},
+    "theme": "default",
+}
+# The narrowest desktop column a diagram appears in: the README on the repository's home page, which
+# GitHub draws 838 px wide at every window from 1280 px up. A docs page's column is 861 px or wider.
+GITHUB_COLUMN = 838
 
 FENCE = re.compile(r"^```mermaid\n(.*?)^```", re.M | re.S)
 INIT = re.compile(r"^%%\{init: (.*)\}%%$")
@@ -173,6 +195,54 @@ def test_house_lines_labels_and_groups_read_on_every_github_theme(page):
     assert max(contrast(theme["clusterBkg"], background), contrast(theme["clusterBorder"], background)) >= (
         GRAPHIC_MIN
     )
+
+
+def _unavailable(reason: str):
+    if os.environ.get("AIDIDIT_REQUIRE_DIAGRAMS") == "1":
+        pytest.fail(f"AIDIDIT_REQUIRE_DIAGRAMS=1 but {reason}")
+    pytest.skip(reason)
+
+
+@pytest.fixture(scope="module")
+def mermaid():
+    """A browser page holding GitHub's Mermaid build, initialised the way GitHub initialises it.
+
+    Edge is the browser because Windows ships it and the fonts GitHub's diagrams ask for, so the text
+    is measured in the font a reader sees rather than a fallback."""
+    try:
+        from playwright.sync_api import Error, sync_playwright
+    except ImportError:
+        _unavailable("Playwright is not installed: run `uv run --group diagrams pytest -m diagrams`")
+    with sync_playwright() as playwright:
+        try:
+            browser = playwright.chromium.launch(channel="msedge")
+        except Error as error:
+            _unavailable(f"Microsoft Edge could not start: {error.message.splitlines()[0]}")
+        page = browser.new_page()
+        script = f'<script src="{MERMAID_JS}" integrity="{MERMAID_SRI}" crossorigin="anonymous"></script>'
+        page.set_content(f'<div id="drawing"></div>{script}', wait_until="load")
+        page.evaluate("config => mermaid.initialize(config)", GITHUB_MERMAID_CONFIG)
+        yield page
+        browser.close()
+
+
+def _natural_width(page, ident: str, body: str) -> float:
+    return page.evaluate(
+        """async ([id, source]) => {
+            const drawing = document.getElementById("drawing");
+            drawing.innerHTML = (await mermaid.render(id, source)).svg;
+            return drawing.querySelector("svg").viewBox.baseVal.width;
+        }""",
+        [re.sub(r"\W", "-", ident), body],
+    )
+
+
+@pytest.mark.diagrams
+@pytest.mark.parametrize(("ident", "body"), DIAGRAMS, ids=IDS)
+def test_every_diagram_fits_the_github_column_without_shrinking(mermaid, ident, body):
+    width = _natural_width(mermaid, ident, body)
+
+    assert width <= GITHUB_COLUMN, f"{ident} is {width:.0f} px wide; GitHub shrinks it and cuts it off"
 
 
 @pytest.mark.parametrize("stage", sorted(p.name for p in STAGES_DIR.iterdir() if p.is_dir()))

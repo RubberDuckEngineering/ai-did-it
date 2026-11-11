@@ -9,8 +9,8 @@ step by step.
 ## 🧱 Sliced by Feature, Not by Layer
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}}}%%
-flowchart LR
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}, "flowchart": {"diagramPadding": 8}}}%%
+flowchart TB
     CLI(["cli.py<br/>parse arguments only"]):::duck
     subgraph FEATURES["features/: one folder per verb"]
         direction TB
@@ -46,13 +46,13 @@ swap in fakes without patching anything.
 ## 📦 `aididit install`: Idempotent by Design
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}}}%%
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}, "flowchart": {"diagramPadding": 8}}}%%
 flowchart TB
     START(["aididit install [PROJECT]<br/>--integration AGENT [--no-init]"]):::duck --> EX{"Project folder exists?"}:::gate
     EX -->|"no"| E2A(["exit 2"]):::stop
     EX -->|"yes"| SK{"Already a Spec Kit<br/>project (.specify/)?"}:::gate
     SK -->|"no, and --no-init"| E2B(["exit 2: drop --no-init<br/>to create one"]):::stop
-    SK -->|"no"| INIT(["specify init --here --force<br/>--ignore-agent-tools --integration AGENT"]):::link
+    SK -->|"no"| INIT(["specify init --here --force<br/>--ignore-agent-tools<br/>--integration AGENT"]):::link
     SK -->|"yes"| ADD
     INIT -->|"fails"| E1(["exit 1: nothing<br/>after it runs"]):::stop
     INIT -->|"ok"| ADD(["specify extension add<br/>--dev pack --force"]):::link
@@ -60,7 +60,7 @@ flowchart TB
     ADD -->|"ok"| SEED{"board.md already there?"}:::gate
     SEED -->|"yes"| KEEP(["keep yours"]):::ok
     SEED -->|"no"| COPY[/"seed the starter board"/]:::note
-    KEEP --> IGN[/"lanes/ git-ignored<br/>(unless you already have an ignore file)"/]:::note
+    KEEP --> IGN[/"lanes/ git-ignored<br/>(unless you already<br/>have an ignore file)"/]:::note
     COPY --> IGN
     IGN --> WF(["specify workflow add<br/>aididit-lane.yml"]):::link
     WF -->|"fails"| WARN(["warning only: every<br/>stage command still works"]):::gate
@@ -91,8 +91,8 @@ on a new project until you write it.
 ## 🧹 `aididit uninstall`: Leave the Furniture
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}}}%%
-flowchart LR
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}, "flowchart": {"diagramPadding": 8}}}%%
+flowchart TB
     U(["aididit uninstall [PROJECT]<br/>[--keep-config]"]):::duck --> SK{"A Spec Kit project?"}:::gate
     SK -->|"no"| E2(["exit 2: nothing to remove"]):::stop
     SK -->|"yes"| W(["specify workflow remove<br/>aididit-lane"]):::link
@@ -113,8 +113,8 @@ also outlive a reinstall, so `uninstall` followed by `install` is a clean upgrad
 ## 🩺 `aididit doctor`: Check Before You Wreck
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}}}%%
-flowchart TB
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}, "flowchart": {"diagramPadding": 8}}}%%
+flowchart LR
     D(["aididit doctor"]):::duck --> PY{"Python 3.11 or newer?"}:::gate
     D --> SPK{"Spec Kit found?"}:::gate
     D --> GIT{"git on PATH?"}:::gate
@@ -142,8 +142,8 @@ there before it trusts whatever happens to be first on `PATH`
 ([uv](sources.md#uv)).
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}}}%%
-flowchart LR
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}, "flowchart": {"diagramPadding": 8}}}%%
+flowchart TB
     A{"AIDIDIT_SPECIFY set?"}:::gate -->|"yes"| USE1(["use it"]):::ok
     A -->|"no"| B{"specify beside the<br/>Python interpreter?"}:::gate
     B -->|"yes"| USE2(["use the bundled one"]):::ok

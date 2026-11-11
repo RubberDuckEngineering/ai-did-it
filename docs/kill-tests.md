@@ -11,8 +11,8 @@ The idea is mutation testing's: judge a test suite by the faults it can detect
 an assertion would notice if that line were wrong.
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}}}%%
-flowchart LR
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#FFF4D6", "primaryTextColor": "#1B2A41", "primaryBorderColor": "#1B2A41", "textColor": "#1B2A41", "lineColor": "#7C8BA1", "edgeLabelBackground": "#FFF4D6", "clusterBkg": "#1B2A41", "clusterBorder": "#FFD23F", "titleColor": "#FFD23F"}, "flowchart": {"diagramPadding": 8}}}%%
+flowchart TB
     G(["a guard:<br/>a test that protects something"]):::link --> C{"Control: run it on<br/>the clean tree. Green?"}:::gate
     C -->|"no"| BAD1(["the guard cannot pass:<br/>fix the guard"]):::stop
     C -->|"yes"| M(["apply ONE named mutation,<br/>outside the guard's own file"]):::link
@@ -252,6 +252,17 @@ flowchart LR
 | 169 | `tests/test_release_workflow.py::test_the_token_writes_only_what_the_release_needs` | the job loses `attestations: write`, so it cannot store the attestation | green | red |
 | 170 | `tests/test_release_workflow.py::test_the_token_writes_only_what_the_release_needs` | the job also gets `packages: write` | green | red |
 | 171 | `tests/test_ci_workflows.py::test_every_action_is_pinned_to_a_commit_with_its_release_named[release.yml:24]` | the attest action floats on its `v4` tag | green | red |
+| 172 | `tests/test_diagrams.py::test_every_diagram_fits_the_github_column_without_shrinking[README.md#1]` | the README's lifecycle runs left to right again (2,080 px) | green | red |
+| 173 | `tests/test_diagrams.py::test_every_diagram_fits_the_github_column_without_shrinking[docs/cli.md#4]` | one diagram's init line drops the 8 px padding (904 px) | green | red |
+| 174 | `tests/test_diagrams.py::test_every_diagram_fits_the_github_column_without_shrinking[docs/lifecycle.md#3]` | the panel's four rulings go back onto one row (1,106 px) | green | red |
+| 175 | `tests/test_diagrams.py::test_every_diagram_fits_the_github_column_without_shrinking[docs/stages.md#3]` | Mode B's four outcomes go back onto one row (1,002 px) | green | red |
+| 176 | `tests/test_diagrams.py::test_every_diagram_fits_the_github_column_without_shrinking[docs/stages.md#7]` | Investigate's four verdicts go back onto one row (1,109 px) | green | red |
+| 177 | `tests/test_diagrams.py::test_every_diagram_fits_the_github_column_without_shrinking[docs/panel.md#3]` | the triage staircase loses its aligned column (876 px) | green | red |
+| 178 | `tests/test_diagrams.py::test_every_diagram_fits_the_github_column_without_shrinking[docs/panel.md#1]` | the four citation outcomes go back onto one row (879 px) | green | red |
+| 179 | `tests/test_ci_workflows.py::test_one_test_leg_measures_every_diagram_and_cannot_skip` | the measuring step is deleted | green | red |
+| 180 | `tests/test_ci_workflows.py::test_one_test_leg_measures_every_diagram_and_cannot_skip` | the measuring step no longer requires the measurement | green | red |
+| 181 | `tests/test_ci_workflows.py::test_one_test_leg_measures_every_diagram_and_cannot_skip` | the measuring step runs without the `diagrams` group | green | red |
+| 182 | `tests/test_ci_workflows.py::test_one_test_leg_measures_every_diagram_and_cannot_skip` | the measuring step moves to the Ubuntu leg | green | red |
 
 ## 📝 Notes on Specific Rows
 
@@ -314,6 +325,14 @@ appeared in neither its log nor its SARIF. Trivy exited 1 on a lockfile pinning 
 Row 160 first went red through a `KeyError`, not an assertion, so it did not count; the test now
 asserts on the missing key.
 
+**Rows 172 to 178 mutate the diagrams, never the test.** Each removes one thing the redraw added,
+and the width in brackets is what the test then measured. Rows 174 to 178 also prove that every
+`~~~` row split is needed: delete any one and its diagram no longer fits. The test was first seen
+red on the diagrams as they were on `main`, where 21 of 34 were wider than the column. Rows 179 to
+182 keep the measurement in CI. The skip guard itself was observed on 2026-11-11 without
+Playwright installed: 35 skips without `AIDIDIT_REQUIRE_DIAGRAMS`, and 35 failures with it set to
+`1`, which is what stops CI from passing a check it never ran.
+
 **Row 73 is the bug the tests found.** The first version applied NFKC before folding quotes.
 NFKC splits a double prime into two single primes, which then folded to `''` instead of `"`. The
 per-character fold test went red, and the fix was to fold first.
@@ -338,6 +357,12 @@ per-character fold test went red, and the fix was to fold first.
   `actions/attest-build-provenance` v4.2.2 is a composite action that runs `actions/attest` v4.2.1,
   whose `action.yml` at its pinned commit was read as `node24` on 2026-11-11.
 
+- **Diagrams as GitHub draws them.** Rows 172 to 178 measure each diagram with Mermaid 12.2.0
+  and the settings read from GitHub's diagram viewer on 2026-11-11. On that date the test's widths
+  matched github.com to the pixel for every diagram GitHub drew without shrinking. If GitHub
+  upgrades Mermaid, the pin goes stale and the test can pass while GitHub crops again. The 838 px
+  column is GitHub's page layout, measured at windows 1280 px and wider; a
+  narrower window or a phone (about 346 px) still crops, and only GitHub can fix that.
 - **The two workflows themselves.** `release.yml` and the `identity` job in `ci.yml` only run on
   GitHub. Rows 106 to 117 cover the tools they call. The secret was observed reaching the
   `identity` job on 2026-11-10, when it checked 1 commit and printed no term. Whether a tag push
