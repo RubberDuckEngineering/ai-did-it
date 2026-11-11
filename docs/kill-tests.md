@@ -322,15 +322,19 @@ per-character fold test went red, and the fix was to fold first.
 
 - **The security workflow on GitHub.** Rows 152 to 163 read `security.yml`, and the local runs
   above exercise the scanners. That the jobs pass on a runner is read from this change's pull
-  request run. The Security tab upload happens only on `main` and the weekly run, so it is observed
-  after the merge. Whether both jobs block a merge depends on the `protect main` ruleset, which
-  lives in GitHub's settings, not in this repository.
+  request run. The Security tab upload happens only on `main` and the weekly run; the first, on
+  2026-11-11, recorded a gitleaks and a Trivy analysis with 0 results each. Whether both jobs block
+  a merge depends on the `protect main` ruleset, which lives in GitHub's settings, not in this
+  repository; on 2026-11-11 it was read through the API and requires both.
 - **Dependabot.** Row 163 checks the config names both package managers, not that Dependabot opens
-  pull requests; that is observed on its first weekly run.
-- **A real attestation.** Rows 164 to 171 read `release.yml`. The attestation is signed only when a
-  tag runs the workflow on GitHub, so it is observed on the next release, with
-  `gh attestation verify aididit-vX.Y.Z.zip --repo RubberDuckEngineering/ai-did-it`. Releases up to
-  v0.2.2 were published before this step and have no attestation. The pinned
+  pull requests. Its first run, on 2026-11-11 when the config merged, opened a grouped `uv` pull
+  request (Spec Kit 1.3.2 and ruff) that passed every check.
+- **A real attestation.** Rows 164 to 171 read `release.yml`; the attestation is signed only when a
+  tag runs the workflow on GitHub. It was observed on v0.2.3, on 2026-11-11:
+  `gh attestation verify aididit-v0.2.3.zip --repo RubberDuckEngineering/ai-did-it` exited 0 and
+  named `release.yml@refs/tags/v0.2.3` as the signer. Two controls exited 1: the same zip with one
+  byte appended, and v0.2.2's zip. Releases up to v0.2.2 were published before this step and have
+  no attestation; each release is checked the same way. The pinned
   `actions/attest-build-provenance` v4.2.2 is a composite action that runs `actions/attest` v4.2.1,
   whose `action.yml` at its pinned commit was read as `node24` on 2026-11-11.
 
