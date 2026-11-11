@@ -8,6 +8,11 @@ All notable changes to this project are documented here. The format follows
 
 ### Added
 
+- **Security scans.** A new `security` workflow runs gitleaks over every commit for secrets and
+  Trivy over `uv.lock` for dependencies with a HIGH or CRITICAL CVE. It runs on each pull request,
+  each push to `main` and weekly, and `main` and the weekly run publish results to the Security tab.
+  Both scanners are pinned and checksum-verified before they run.
+- **Dependabot.** Weekly grouped updates for the GitHub Actions and the `uv` dependencies.
 - **The README names the Spec Kit catalog listing.** `specify extension search aididit` finds the
   pack. The community catalog is for discovery only, so installing still uses `--from`.
 

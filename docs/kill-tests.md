@@ -232,6 +232,18 @@ flowchart LR
 | 149 | `tests/pack/test_board_setup.py::test_a_users_first_item_on_the_starter_board_is_aid_1` | a second demo item `AID-1` is added beside `AID-0` | green | red |
 | 150 | `tests/test_repo_links.py::test_every_organisation_link_names_a_current_repository` | the package's Homepage goes back to the pre-rename repository name | green | red |
 | 151 | `tests/test_repo_links.py::test_every_organisation_link_names_a_current_repository` | a link to an unknown repository is added to `CONTRIBUTING.md`, a file that never held one | green | red |
+| 152 | `tests/test_security_workflow.py::test_the_secrets_job_reads_the_whole_history_and_fails_on_a_finding` | the secrets job checks out a shallow clone | green | red |
+| 153 | `tests/test_security_workflow.py::test_the_secrets_job_reads_the_whole_history_and_fails_on_a_finding` | gitleaks runs without `--redact` | green | red |
+| 154 | `tests/test_security_workflow.py::test_the_secrets_job_reads_the_whole_history_and_fails_on_a_finding` | gitleaks exits 0 on a finding | green | red |
+| 155 | `tests/test_security_workflow.py::test_the_dependency_job_fails_on_a_high_or_critical_cve` | the gate ignores HIGH CVEs | green | red |
+| 156 | `tests/test_security_workflow.py::test_the_dependency_job_fails_on_a_high_or_critical_cve` | the gate's Trivy run loses `--exit-code 1`, so it reports and passes | green | red |
+| 157 | `tests/test_security_workflow.py::test_every_downloaded_scanner_is_pinned_and_checksum_verified` | Trivy is unpacked without its checksum check | green | red |
+| 158 | `tests/test_security_workflow.py::test_every_downloaded_scanner_is_pinned_and_checksum_verified` | gitleaks floats to `latest` | green | red |
+| 159 | `tests/test_security_workflow.py::test_every_downloaded_scanner_is_pinned_and_checksum_verified` | gitleaks is unpacked before its checksum is verified | green | red |
+| 160 | `tests/test_security_workflow.py::test_the_scans_run_on_each_change_and_every_week` | the weekly schedule is removed | green | red |
+| 161 | `tests/test_security_workflow.py::test_the_workflow_reads_only_except_where_it_uploads_results` | the workflow's default token can write contents | green | red |
+| 162 | `tests/test_security_workflow.py::test_the_workflow_reads_only_except_where_it_uploads_results` | the secrets job also gets `actions: write` | green | red |
+| 163 | `tests/test_security_workflow.py::test_dependabot_covers_every_package_manager_the_repository_uses` | Dependabot's `uv` entry is removed | green | red |
 
 ## 📝 Notes on Specific Rows
 
@@ -285,11 +297,28 @@ repository: the accepted commit fails a whole-history check and is not read by t
 and a list of those four would pass the next file to pick up a link. Before the fix the test was
 seen red on all ten stale links, and both rows' mutations are applied outside the test.
 
+**Rows 152 to 163 read the workflow, so the scanners were also run for real.** A test can show a
+flag is there, not that the tool obeys it. On 2026-11-11 the exact CI command lines were run with
+the pinned releases (gitleaks 8.30.1, Trivy 0.76.2, checksums verified). gitleaks exited 0 on a
+clean throwaway repository and 1 once a commit added a random, never-issued `ghp_` token; the token
+appeared in neither its log nor its SARIF. Trivy exited 1 on a lockfile pinning `requests==2.19.0`
+(seven HIGH or CRITICAL findings, among them CVE-2018-18074), and 0 on this repository's `uv.lock`.
+Row 160 first went red through a `KeyError`, not an assertion, so it did not count; the test now
+asserts on the missing key.
+
 **Row 73 is the bug the tests found.** The first version applied NFKC before folding quotes.
 NFKC splits a double prime into two single primes, which then folded to `''` instead of `"`. The
 per-character fold test went red, and the fix was to fold first.
 
 ## 🕳️ Not Covered by a Kill Row
+
+- **The security workflow on GitHub.** Rows 152 to 163 read `security.yml`, and the local runs
+  above exercise the scanners. That the jobs pass on a runner is read from this change's pull
+  request run. The Security tab upload happens only on `main` and the weekly run, so it is observed
+  after the merge. Whether both jobs block a merge depends on the `protect main` ruleset, which
+  lives in GitHub's settings, not in this repository.
+- **Dependabot.** Row 163 checks the config names both package managers, not that Dependabot opens
+  pull requests; that is observed on its first weekly run.
 
 - **The two workflows themselves.** `release.yml` and the `identity` job in `ci.yml` only run on
   GitHub. Rows 106 to 117 cover the tools they call. The secret was observed reaching the

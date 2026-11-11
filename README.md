@@ -227,6 +227,10 @@ The suite has six layers:
   out of commit authors and committers. `tools/check_commit_timezone.py` holds commits made as the
   project to UTC, so their dates say when, never where. CI runs both over the commits a pull request
   or push brings (`tools/commit_range.py`), so a commit on `main` is judged once, when it lands.
+- **Security** scans run on every pull request, every push to `main` and weekly
+  (`.github/workflows/security.yml`): gitleaks reads every commit for secrets, and Trivy reads
+  `uv.lock` for dependencies with a HIGH or CRITICAL CVE. Dependabot proposes updates to the
+  Actions and Python dependencies each week.
 - **End-to-end** tests drive the real `specify` against a throwaway project.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the rules every change follows. They come from the pack
