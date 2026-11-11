@@ -72,8 +72,10 @@ uv run ruff check src tests
 2. Add a CHANGELOG entry.
 3. Dry-run the release zip: `uv run python -m tools.build_pack_zip --out dist/aididit.zip`.
 4. Tag `vX.Y.Z` on main and push the tag. `.github/workflows/release.yml` checks that the tag
-   matches the pack version, builds the zip and attaches it to a GitHub release. That release
-   asset is the `download_url` for Spec Kit's community catalog.
+   matches the pack version, builds the zip, attests its build provenance and attaches it to a
+   GitHub release. That release asset is the `download_url` for Spec Kit's community catalog.
+5. Download the asset and check its attestation:
+   `gh attestation verify aididit-vX.Y.Z.zip --repo RubberDuckEngineering/ai-did-it`.
 
 ## Maintainers
 
