@@ -6,6 +6,8 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.2.4] - 2026-11-12
+
 ### Fixed
 
 - **Diagrams draw at full size on GitHub.** GitHub shrinks a diagram wider than the page column to
