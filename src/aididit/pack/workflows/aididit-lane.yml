@@ -2,7 +2,7 @@ schema_version: "1.0"
 workflow:
   id: "aididit-lane"
   name: "A·I·DID·IT single lane"
-  version: "0.2.3"
+  version: "0.2.4"
   author: "Rubber Duck Engineering"
   description: "Runs one work item through Ideate → Draft → Iterate → Deliver → (you merge) → Investigate → Tidy, with you approving each hand-off"
 
